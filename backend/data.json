@@ -1,0 +1,26 @@
+{
+  "users": [
+    {
+      "id": "36173bbd-c204-46ad-aca5-25e089ca64de",
+      "email": "brunocesargevehrpawlak@gmail.com",
+      "password": "senha123",
+      "fullName": "bruno cesar gevehr pawlak",
+      "age": 20,
+      "weight": 80.0,
+      "height": 180.0,
+      "goal": "ganho_massa",
+      "restrictions": [],
+      "nutrition": {
+        "protein": 35,
+        "carbs": 50,
+        "fat": 12,
+        "totalGrams": 350
+      },
+      "plan": "mensal",
+      "createdAt": "2026-06-03T23:35:13.362314"
+    }
+  ],
+  "sessions": {
+    "08faa3c846330ed5f699f941e9b39a0d": "36173bbd-c204-46ad-aca5-25e089ca64de"
+  }
+}
