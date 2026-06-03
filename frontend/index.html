@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NUTRIBOX — Marmitas fitness sob medida</title>
+  <meta name="description" content="Cardápio personalizado, metas nutricionais e entregas no seu ritmo. Comece sua jornada fitness com a NUTRIBOX." />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <section class="hero container">
+    <span class="pill">🌿 Nutrição inteligente, sabor de verdade</span>
+    <h1><span class="accent">NUTRI</span>BOX</h1>
+    <p>Defina suas metas de macros, escolha seu plano e receba refeições personalizadas geradas por algoritmo nutricional, prontas pra esquentar.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary btn-lg" href="/cadastro.html">Criar minha conta</a>
+      <a class="btn btn-outline btn-lg" href="/login.html">Já sou cliente</a>
+    </div>
+  </section>
+
+  <section class="features container">
+    <div class="grid grid-3">
+      <div class="feature">
+        <div class="icon">🎯</div>
+        <h3>Metas personalizadas</h3>
+        <p>Defina proteína, carbo e gordura por refeição. O cardápio se adapta a você.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🥗</div>
+        <h3>Cardápio inteligente</h3>
+        <p>Variedade semanal gerada por algoritmo, respeitando restrições alimentares.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🚚</div>
+        <h3>Entregas no ritmo certo</h3>
+        <p>Planos semanal, mensal ou anual. Receba fresquinho onde estiver.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">© <span id="year"></span> Paola e Bruno. Todos os direitos reservados.</div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script>
+    renderHeader(document.getElementById("header"));
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

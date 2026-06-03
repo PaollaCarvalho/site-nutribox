@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil — NUTRIBOX</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="/js/app.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script>
+    (async () => {
+      const user = await setupDashboard("perfil");
+      if (!user) return;
+      const { restrictions: ROPTS } = await api("/api/restrictions");
+      const selected = new Set(user.restrictions || []);
+      const n = user.nutrition || { protein: 0, carbs: 0, fat: 0, totalGrams: 0 };
+
+      document.getElementById("content").innerHTML = `
+        <div style="margin-bottom:20px">
+          <h2 style="margin:0;font-size:22px">Seu perfil</h2>
+          <p class="help" style="margin:4px 0 0">Atualize seus dados, metas e restrições alimentares.</p>
+        </div>
+        <form id="form">
+          <div class="section">
+            <h3>Dados pessoais</h3>
+            <div class="grid grid-2">
+              <div class="field"><label class="label">Nome completo</label>
+                <input class="input" id="fullName" value="${user.fullName}" required minlength="3" maxlength="100"/></div>
+              <div class="field"><label class="label">E-mail</label>
+                <input class="input" value="${user.email}" disabled/></div>
+            </div>
+            <div class="grid grid-3">
+              <div class="field"><label class="label">Idade</label>
+                <input class="input" id="age" type="number" min="12" max="120" value="${user.age}"/></div>
+              <div class="field"><label class="label">Peso (kg)</label>
+                <input class="input" id="weight" type="number" step="0.1" min="30" max="300" value="${user.weight}"/></div>
+              <div class="field"><label class="label">Altura (cm)</label>
+                <input class="input" id="height" type="number" min="100" max="250" value="${user.height}"/></div>
+            </div>
+            <div class="field"><label class="label">Objetivo</label>
+              <select class="select" id="goal">
+                <option value="emagrecimento" ${user.goal==='emagrecimento'?'selected':''}>Emagrecimento</option>
+                <option value="ganho_massa" ${user.goal==='ganho_massa'?'selected':''}>Ganho de massa</option>
+                <option value="manutencao" ${user.goal==='manutencao'?'selected':''}>Manutenção</option>
+              </select></div>
+          </div>
+
+          <div class="section">
+            <h3>Metas nutricionais</h3>
+            <div class="grid grid-4">
+              <div class="field"><label class="label">Proteína (g)</label><input class="input" id="protein" type="number" value="${n.protein}"/></div>
+              <div class="field"><label class="label">Carbo (g)</label><input class="input" id="carbs" type="number" value="${n.carbs}"/></div>
+              <div class="field"><label class="label">Gordura (g)</label><input class="input" id="fat" type="number" value="${n.fat}"/></div>
+              <div class="field"><label class="label">Total (g)</label><input class="input" id="totalGrams" type="number" value="${n.totalGrams}"/></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Restrições alimentares</h3>
+            <div class="grid grid-4" id="restrictions">
+              ${ROPTS.map(r => `
+                <label class="check ${selected.has(r)?'checked':''}" data-r="${r}">
+                  <input type="checkbox" ${selected.has(r)?'checked':''}/>
+                  <span>${r}</span>
+                </label>`).join("")}
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end">
+            <button class="btn btn-primary" type="submit" id="save">Salvar alterações</button>
+          </div>
+        </form>`;
+
+      document.querySelectorAll("#restrictions .check").forEach(el => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          const r = el.dataset.r;
+          const input = el.querySelector("input");
+          if (selected.has(r)) { selected.delete(r); input.checked = false; el.classList.remove("checked"); }
+          else { selected.add(r); input.checked = true; el.classList.add("checked"); }
+        });
+      });
+
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById("save");
+        btn.disabled = true; btn.textContent = "Salvando...";
+        try {
+          await api("/api/me", { method: "PATCH", auth: true, body: {
+            fullName: fullName.value.trim(),
+            age: +age.value, weight: +weight.value, height: +height.value,
+            goal: goal.value,
+            restrictions: [...selected],
+            nutrition: { protein: +protein.value, carbs: +carbs.value, fat: +fat.value, totalGrams: +totalGrams.value },
+          }});
+          toast("Perfil atualizado!");
+        } catch (err) { toast(err.message, "error"); }
+        btn.disabled = false; btn.textContent = "Salvar alterações";
+      });
+    })();
+  </script>
+</body>
+</html>

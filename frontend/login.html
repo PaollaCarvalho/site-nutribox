@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entrar — NUTRIBOX</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="page-narrow">
+    <a href="/" class="brand">
+      <span class="brand-icon">🌱</span>
+      <span class="brand-name"><span class="accent">NUTRI</span>BOX</span>
+    </a>
+
+    <div class="card card-pad" style="width:100%;max-width:420px">
+      <h1 class="title">Entrar na sua conta</h1>
+      <p class="subtitle">Acesse seu painel e cardápio personalizado.</p>
+
+      <form id="form" style="margin-top:24px">
+        <div class="field">
+          <label class="label" for="email">E-mail</label>
+          <input class="input" id="email" type="email" placeholder="voce@email.com" required maxlength="255" />
+        </div>
+        <div class="field">
+          <label class="label" for="password">Senha</label>
+          <input class="input" id="password" type="password" placeholder="••••••••" required minlength="6" maxlength="100" />
+        </div>
+        <button class="btn btn-primary btn-full" type="submit" id="submit">Entrar</button>
+      </form>
+
+      <p style="text-align:center;margin-top:24px;font-size:14px;color:var(--muted-foreground)">
+        Ainda não tem conta?
+        <a href="/cadastro.html" style="color:var(--primary);font-weight:500">Cadastre-se</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script>
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("submit");
+      btn.disabled = true; btn.textContent = "Entrando...";
+      try {
+        const data = await api("/api/signin", {
+          method: "POST",
+          body: {
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+          },
+        });
+        Storage.token = data.token;
+        toast("Bem-vindo de volta!");
+        setTimeout(() => location.href = "/dashboard.html", 400);
+      } catch (err) {
+        toast(err.message, "error");
+        btn.disabled = false; btn.textContent = "Entrar";
+      }
+    });
+  </script>
+</body>
+</html>

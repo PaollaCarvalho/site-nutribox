@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cardápio — NUTRIBOX</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="/js/app.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script>
+    (async () => {
+      if (!(await setupDashboard("cardapio"))) return;
+      const { week } = await api("/api/menu");
+      const content = document.getElementById("content");
+
+      let activeDay = week[0].day;
+      const render = () => {
+        const day = week.find(d => d.day === activeDay) || week[0];
+        content.innerHTML = `
+          <div style="margin-bottom:20px">
+            <h2 style="margin:0;font-size:22px">Seu cardápio da semana</h2>
+            <p class="help" style="margin:4px 0 0">Refeições geradas a partir das suas metas e restrições.</p>
+          </div>
+          <div class="tabs" style="margin-bottom:24px">
+            ${week.map(d => `<button data-day="${d.day}" class="${d.day===activeDay?"active":""}">${d.day}</button>`).join("")}
+          </div>
+          <div class="grid grid-3">
+            ${day.meals.map(m => `
+              <div class="meal">
+                <div class="type">${m.type}</div>
+                <h3>${m.name}</h3>
+                <p class="desc">${m.description}</p>
+                <div class="macros">
+                  <div><p class="v">${m.protein}</p><p class="l">P</p></div>
+                  <div><p class="v">${m.carbs}</p><p class="l">C</p></div>
+                  <div><p class="v">${m.fat}</p><p class="l">G</p></div>
+                  <div><p class="v hl">${m.kcal}</p><p class="l">kcal</p></div>
+                </div>
+              </div>`).join("")}
+          </div>`;
+        content.querySelectorAll(".tabs button").forEach(b =>
+          b.addEventListener("click", () => { activeDay = b.dataset.day; render(); }));
+      };
+      render();
+    })();
+  </script>
+</body>
+</html>
