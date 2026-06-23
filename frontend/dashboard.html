@@ -7,45 +7,147 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
-  <div id="app"></div>
-  <script src="/js/app.js"></script>
-  <script src="/js/dashboard.js"></script>
-  <script>
-    (async () => {
-      if (!(await setupDashboard("cardapio"))) return;
-      const { week } = await api("/api/menu");
-      const content = document.getElementById("content");
+<div id="app"></div>
+<script src="/js/app.js"></script>
+<script src="/js/dashboard.js"></script>
+<script>
+(async () => {
+  const user = await setupDashboard("cardapio");
+  if (!user) return;
 
-      let activeDay = week[0].day;
-      const render = () => {
-        const day = week.find(d => d.day === activeDay) || week[0];
-        content.innerHTML = `
-          <div style="margin-bottom:20px">
-            <h2 style="margin:0;font-size:22px">Seu cardápio da semana</h2>
-            <p class="help" style="margin:4px 0 0">Refeições geradas a partir das suas metas e restrições.</p>
-          </div>
-          <div class="tabs" style="margin-bottom:24px">
-            ${week.map(d => `<button data-day="${d.day}" class="${d.day===activeDay?"active":""}">${d.day}</button>`).join("")}
-          </div>
-          <div class="grid grid-3">
-            ${day.meals.map(m => `
-              <div class="meal">
-                <div class="type">${m.type}</div>
-                <h3>${m.name}</h3>
-                <p class="desc">${m.description}</p>
-                <div class="macros">
-                  <div><p class="v">${m.protein}</p><p class="l">P</p></div>
-                  <div><p class="v">${m.carbs}</p><p class="l">C</p></div>
-                  <div><p class="v">${m.fat}</p><p class="l">G</p></div>
-                  <div><p class="v hl">${m.kcal}</p><p class="l">kcal</p></div>
-                </div>
-              </div>`).join("")}
-          </div>`;
-        content.querySelectorAll(".tabs button").forEach(b =>
-          b.addEventListener("click", () => { activeDay = b.dataset.day; render(); }));
-      };
-      render();
-    })();
-  </script>
+  let week = [];
+  try {
+    const data = await api("/api/menu");
+    week = data.week;
+  } catch(e) {
+    // fallback mock
+    week = [
+      { day: "Seg", meals: [
+        { type:"☀️ Café da manhã", name:"Omelete de espinafre", description:"Omelete com 3 ovos, espinafre refogado e queijo cottage.", protein:"28g", carbs:"6g", fat:"14g", kcal:"262 kcal" },
+        { type:"🍎 Lanche manhã",  name:"Iogurte grego + granola", description:"Iogurte grego natural com granola artesanal e mel.", protein:"14g", carbs:"32g", fat:"6g",  kcal:"238 kcal" },
+        { type:"🍽️ Almoço",        name:"Frango grelhado + quinoa", description:"Peito de frango grelhado com quinoa e salada verde.", protein:"42g", carbs:"48g", fat:"9g",  kcal:"441 kcal" },
+        { type:"🥤 Pré-treino",    name:"Wrap integral de atum",  description:"Wrap de trigo integral recheado com atum, cenoura e agrião.", protein:"30g", carbs:"36g", fat:"7g",  kcal:"327 kcal" },
+        { type:"🌙 Jantar",        name:"Salmão com brócolis",    description:"Filé de salmão ao limão com brócolis no vapor e arroz integral.", protein:"38g", carbs:"30g", fat:"18g", kcal:"434 kcal", fromNutri: true },
+      ]},
+      { day: "Ter", meals: [
+        { type:"☀️ Café da manhã", name:"Panqueca de banana", description:"Panqueca feita com banana, aveia e ovo. Sem açúcar adicionado.", protein:"18g", carbs:"44g", fat:"8g", kcal:"320 kcal" },
+        { type:"🍎 Lanche manhã",  name:"Castanhas + fruta", description:"Mix de castanhas com uma maçã ou pera.", protein:"8g", carbs:"22g", fat:"14g", kcal:"238 kcal" },
+        { type:"🍽️ Almoço",        name:"Carne moída + batata doce", description:"Patinho moído refogado com legumes e batata doce assada.", protein:"36g", carbs:"52g", fat:"12g", kcal:"464 kcal" },
+        { type:"🥤 Pré-treino",    name:"Vitamina proteica", description:"Vitamina de banana com whey protein e leite vegetal.", protein:"32g", carbs:"28g", fat:"4g", kcal:"276 kcal" },
+        { type:"🌙 Jantar",        name:"Tilápia grelhada + legumes", description:"Filé de tilápia grelhado com mix de legumes coloridos.", protein:"34g", carbs:"18g", fat:"8g", kcal:"280 kcal" },
+      ]},
+      { day: "Qua", meals: [
+        { type:"☀️ Café da manhã", name:"Açaí bowl proteico", description:"Bowl de açaí com granola, banana e pasta de amendoim.", protein:"16g", carbs:"58g", fat:"12g", kcal:"404 kcal" },
+        { type:"🍎 Lanche manhã",  name:"Tapioca de queijo cottage", description:"Tapioca com queijo cottage e orégano.", protein:"18g", carbs:"30g", fat:"4g", kcal:"228 kcal" },
+        { type:"🍽️ Almoço",        name:"Peito de peru + arroz integral", description:"Peito de peru grelhado com arroz integral e feijão carioca.", protein:"40g", carbs:"60g", fat:"6g", kcal:"456 kcal" },
+        { type:"🥤 Pré-treino",    name:"Crepioca de frango", description:"Crepioca de tapioca com frango desfiado e tomate.", protein:"34g", carbs:"24g", fat:"6g", kcal:"286 kcal" },
+        { type:"🌙 Jantar",        name:"Omelete de legumes", description:"Omelete com 3 ovos, pimentão, cebola e espinafre.", protein:"24g", carbs:"8g", fat:"16g", kcal:"272 kcal" },
+      ]},
+      { day: "Qui", meals: [
+        { type:"☀️ Café da manhã", name:"Mingau de aveia proteico", description:"Aveia cozida com whey, canela e frutas vermelhas.", protein:"24g", carbs:"42g", fat:"6g", kcal:"318 kcal" },
+        { type:"🍎 Lanche manhã",  name:"Ovos cozidos + fruta", description:"2 ovos cozidos com uma banana ou maçã.", protein:"14g", carbs:"26g", fat:"10g", kcal:"246 kcal" },
+        { type:"🍽️ Almoço",        name:"Strogonoff de frango fit", description:"Strogonoff de frango com iogurte grego no lugar do creme.", protein:"38g", carbs:"44g", fat:"10g", kcal:"418 kcal" },
+        { type:"🥤 Pré-treino",    name:"Sanduíche integral de atum", description:"Pão integral com atum, tomate e folhas verdes.", protein:"28g", carbs:"34g", fat:"6g", kcal:"302 kcal" },
+        { type:"🌙 Jantar",        name:"Bacalhau ao forno", description:"Lombo de bacalhau assado com batata baroa e azeitonas.", protein:"36g", carbs:"24g", fat:"14g", kcal:"366 kcal" },
+      ]},
+      { day: "Sex", meals: [
+        { type:"☀️ Café da manhã", name:"Wrap de ovos mexidos", description:"Wrap integral com ovos mexidos, abacate e tomate cereja.", protein:"20g", carbs:"32g", fat:"16g", kcal:"348 kcal" },
+        { type:"🍎 Lanche manhã",  name:"Smoothie verde", description:"Smoothie de espinafre, abacaxi, gengibre e whey.", protein:"22g", carbs:"30g", fat:"2g", kcal:"226 kcal" },
+        { type:"🍽️ Almoço",        name:"Picanha grelhada + mandioca", description:"Picanha magra grelhada com mandioca cozida e couve.", protein:"44g", carbs:"38g", fat:"16g", kcal:"476 kcal" },
+        { type:"🥤 Pré-treino",    name:"Iogurte + proteína + aveia", description:"Bowl de iogurte com whey, aveia e mel.", protein:"30g", carbs:"36g", fat:"4g", kcal:"300 kcal" },
+        { type:"🌙 Jantar",        name:"Camarão grelhado + salada", description:"Camarão ao alho e azeite com salada verde e limão.", protein:"30g", carbs:"6g", fat:"12g", kcal:"252 kcal" },
+      ]},
+      { day: "Sáb", meals: [
+        { type:"☀️ Café da manhã", name:"French toast proteico", description:"Rabanada fit com pão integral, ovo e canela.", protein:"22g", carbs:"36g", fat:"10g", kcal:"322 kcal" },
+        { type:"🍎 Lanche manhã",  name:"Mix de frutas + queijo", description:"Salada de frutas com queijo cottage.", protein:"12g", carbs:"32g", fat:"4g", kcal:"212 kcal" },
+        { type:"🍽️ Almoço",        name:"Frango ao curry + arroz", description:"Frango ao curry light com arroz basmati e grão-de-bico.", protein:"40g", carbs:"56g", fat:"10g", kcal:"474 kcal" },
+        { type:"🥤 Pré-treino",    name:"Barra de proteína caseira", description:"Barra de aveia, amendoim e mel feita em casa.", protein:"16g", carbs:"40g", fat:"10g", kcal:"314 kcal" },
+        { type:"🌙 Jantar",        name:"Pizza fit de frigideira", description:"Pizza na frigideira com base de frango, mozzarella e tomate.", protein:"34g", carbs:"24g", fat:"12g", kcal:"340 kcal" },
+      ]},
+      { day: "Dom", meals: [
+        { type:"☀️ Café da manhã", name:"Panqueca de proteína", description:"Panquecas com whey, aveia e ovos. Cobertura de frutas vermelhas.", protein:"28g", carbs:"38g", fat:"8g", kcal:"340 kcal" },
+        { type:"🍎 Lanche manhã",  name:"Abacate com sal e limão", description:"Metade de abacate com sal, limão e azeite.", protein:"2g", carbs:"8g", fat:"18g", kcal:"198 kcal" },
+        { type:"🍽️ Almoço",        name:"Costela assada low & slow", description:"Costela bovina assada lentamente com mandioquinha e couve.", protein:"44g", carbs:"32g", fat:"22g", kcal:"508 kcal" },
+        { type:"🥤 Pré-treino",    name:"Vitamina de morango + whey", description:"Vitamina de morango, banana, leite e whey.", protein:"32g", carbs:"34g", fat:"4g", kcal:"300 kcal" },
+        { type:"🌙 Jantar",        name:"Caldo de frango proteico", description:"Caldo de frango com legumes, gengibre e cúrcuma.", protein:"26g", carbs:"16g", fat:"6g", kcal:"222 kcal" },
+      ]},
+    ];
+  }
+
+  const content = document.getElementById("content");
+  const dias = ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+  let activeDay = dias[Math.min(new Date().getDay()-1, 6)] || "Seg";
+
+  const render = () => {
+    const dayData = week.find(d => d.day === activeDay) || week[0];
+    const totalKcal = dayData.meals.reduce((s,m) => s + parseInt(m.kcal)||0, 0);
+
+    content.innerHTML = `
+      <div class="between mb-6" style="flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="margin:0;font-size:22px;font-weight:800">Cardápio da semana</h2>
+          <p class="text-muted text-sm" style="margin:4px 0 0">Refeições montadas de acordo com suas metas e restrições.</p>
+        </div>
+        <div class="row">
+          <span class="pill pill-orange">🔥 ${totalKcal} kcal/dia</span>
+          <a class="btn btn-primary btn-sm" href="/receitas.html">📋 Receitas do nutri</a>
+        </div>
+      </div>
+
+      <!-- Seletor de dia estilo calendário -->
+      <div class="day-selector mb-6">
+        ${week.map(d => `
+          <button class="day-btn${d.day===activeDay?" active":""}" data-day="${d.day}">
+            <span class="day-short">${d.day}</span>
+          </button>`).join("")}
+      </div>
+
+      <!-- Cards de refeições -->
+      <div class="grid grid-3" style="gap:16px">
+        ${dayData.meals.map(m => `
+          <div class="meal">
+            <div class="meal-header">
+              ${m.fromNutri ? '<div class="recipe-badge">👩‍⚕️ Receita do nutri</div>' : ''}
+              <div class="meal-type">${m.type}</div>
+              <h3>${m.name}</h3>
+            </div>
+            <div class="meal-body">
+              <p class="desc">${m.description}</p>
+            </div>
+            <div class="macros">
+              <div><span class="v">${m.protein}</span><span class="l">Prot</span></div>
+              <div><span class="v">${m.carbs}</span><span class="l">Carb</span></div>
+              <div><span class="v">${m.fat}</span><span class="l">Gord</span></div>
+              <div><span class="v kcal">${m.kcal}</span><span class="l">kcal</span></div>
+            </div>
+          </div>`).join("")}
+      </div>
+
+      <!-- Resumo do dia -->
+      <div class="section" style="margin-top:24px">
+        <div class="section-hd"><h3>Resumo nutricional do dia</h3></div>
+        <div class="stats-bar" style="grid-template-columns:repeat(4,1fr)">
+          ${[
+            { label:"Calorias", val: totalKcal+" kcal", icon:"🔥" },
+            { label:"Proteína", val: dayData.meals.reduce((s,m)=>s+parseInt(m.protein)||0,0)+"g", icon:"💪" },
+            { label:"Carboidrato", val: dayData.meals.reduce((s,m)=>s+parseInt(m.carbs)||0,0)+"g", icon:"🌾" },
+            { label:"Gordura", val: dayData.meals.reduce((s,m)=>s+parseInt(m.fat)||0,0)+"g", icon:"🫒" },
+          ].map(s=>`
+            <div class="stat-card">
+              <div class="stat-icon">${s.icon}</div>
+              <div class="stat-label">${s.label}</div>
+              <div class="stat-val">${s.val}</div>
+            </div>`).join("")}
+        </div>
+      </div>`;
+
+    content.querySelectorAll(".day-btn").forEach(b =>
+      b.addEventListener("click", () => { activeDay = b.dataset.day; render(); })
+    );
+  };
+
+  render();
+})();
+</script>
 </body>
 </html>

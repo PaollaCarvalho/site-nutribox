@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Progresso — NUTRIBOX</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/js/app.js"></script>
+<script src="/js/dashboard.js"></script>
+<script>
+(async () => {
+  const user = await setupDashboard("progresso");
+  if (!user) return;
+  const content = document.getElementById("content");
+  const n = user.nutrition || { protein: 150, carbs: 200, fat: 60 };
+
+  // Mock de dados semanais
+  const weekData = [
+    { day: "Seg", kcal: 1820, protein: 148, carbs: 195, fat: 58, adherence: 96 },
+    { day: "Ter", kcal: 1750, protein: 140, carbs: 185, fat: 55, adherence: 92 },
+    { day: "Qua", kcal: 1900, protein: 155, carbs: 208, fat: 63, adherence: 100 },
+    { day: "Qui", kcal: 1680, protein: 130, carbs: 175, fat: 50, adherence: 88 },
+    { day: "Sex", kcal: 1840, protein: 152, carbs: 198, fat: 59, adherence: 98 },
+    { day: "Sáb", kcal: 1950, protein: 158, carbs: 215, fat: 65, adherence: 100 },
+    { day: "Dom", kcal: 1120, protein: 82, carbs: 130, fat: 28, adherence: 60 },
+  ];
+
+  const avgKcal = Math.round(weekData.reduce((s,d)=>s+d.kcal,0)/weekData.length);
+  const avgAdh  = Math.round(weekData.reduce((s,d)=>s+d.adherence,0)/weekData.length);
+  const maxKcal = Math.max(...weekData.map(d=>d.kcal));
+  const goalKcal = calcKcal(n.protein||150, n.carbs||200, n.fat||60);
+
+  const barH = (v) => Math.round((v / maxKcal) * 120);
+
+  content.innerHTML = `
+    <div class="between mb-6" style="flex-wrap:wrap;gap:12px">
+      <div>
+        <h2 style="margin:0;font-size:22px;font-weight:800">Meu progresso</h2>
+        <p class="text-muted text-sm" style="margin:4px 0 0">Acompanhe sua evolução semanal.</p>
+      </div>
+      <div class="tabs">
+        <button class="active">Esta semana</button>
+        <button>Mês</button>
+        <button>Geral</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="stats-bar" style="margin-bottom:24px">
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-label">Adesão média</div>
+        <div class="stat-val" style="color:var(--primary)">${avgAdh}%</div>
+        <div class="stat-sub">esta semana</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-label">Média calórica</div>
+        <div class="stat-val">${avgKcal}</div>
+        <div class="stat-sub">meta: ${goalKcal} kcal</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-label">Dias completos</div>
+        <div class="stat-val">${weekData.filter(d=>d.adherence>=90).length}</div>
+        <div class="stat-sub">de 7 dias</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔄</div>
+        <div class="stat-label">Sequência atual</div>
+        <div class="stat-val">5 dias</div>
+        <div class="stat-sub">recorde: 12 dias</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="gap:20px;align-items:start">
+      <!-- Gráfico de calorias -->
+      <div class="section" style="margin-bottom:0">
+        <div class="section-hd"><h3>Calorias diárias</h3><span class="pill pill-orange text-xs">meta: ${goalKcal} kcal</span></div>
+
+        <!-- Gráfico de barras simples em HTML/CSS -->
+        <div style="display:flex;align-items:flex-end;gap:8px;height:160px;margin-bottom:10px;padding-top:20px;position:relative">
+          <!-- Linha de meta -->
+          <div style="
+            position:absolute;top:${20-Math.round(((goalKcal-1000)/(maxKcal-1000))*120)+120-Math.round(((goalKcal-1000)/(maxKcal-1000))*120)}px;
+            left:0;right:0;height:1px;border-top:2px dashed var(--warning);z-index:1">
+          </div>
+          ${weekData.map(d=>{
+            const h = barH(d.kcal-1000);
+            const onTrack = d.adherence >= 90;
+            const isToday = d.day === weekData[new Date().getDay()===0?6:new Date().getDay()-1]?.day;
+            return `
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="font-size:11px;font-weight:700;color:${onTrack?"var(--primary)":"var(--warning)"}">${d.kcal}</div>
+                <div style="
+                  width:100%;height:${h}px;
+                  background:${isToday?"var(--foreground)":onTrack?"var(--primary)":"var(--primary-soft)"};
+                  border-radius:6px 6px 0 0;
+                  border-bottom:3px solid ${isToday?"var(--foreground)":onTrack?"var(--primary)":"var(--warning)"};
+                  transition:all 0.4s
+                "></div>
+              </div>`;
+          }).join("")}
+        </div>
+        <div style="display:flex;gap:8px">
+          ${weekData.map(d=>`<div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--muted-foreground)">${d.day}</div>`).join("")}
+        </div>
+      </div>
+
+      <!-- Adesão + Macros -->
+      <div>
+        <div class="section" style="margin-bottom:16px">
+          <div class="section-hd"><h3>Adesão ao plano</h3></div>
+          ${weekData.map(d=>`
+            <div class="progress-wrap">
+              <div class="progress-top">
+                <span class="name">${d.day}</span>
+                <span class="val" style="color:${d.adherence>=90?"var(--primary)":d.adherence>=70?"var(--warning)":"var(--destructive)"}">${d.adherence}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:${d.adherence}%;background:${d.adherence>=90?"var(--primary)":d.adherence>=70?"var(--warning)":"#ef4444"}"></div>
+              </div>
+            </div>`).join("")}
+        </div>
+      </div>
+    </div>
+
+    <!-- Médias de macros -->
+    <div class="section" style="margin-top:20px">
+      <div class="section-hd"><h3>Média de macros esta semana</h3></div>
+      <div class="grid grid-3" style="gap:16px">
+        ${[
+          { name:"Proteína", avg: Math.round(weekData.reduce((s,d)=>s+d.protein,0)/weekData.length), goal: n.protein||150, color:"var(--primary)", icon:"💪" },
+          { name:"Carboidrato", avg: Math.round(weekData.reduce((s,d)=>s+d.carbs,0)/weekData.length), goal: n.carbs||200, color:"var(--warning)", icon:"🌾" },
+          { name:"Gordura", avg: Math.round(weekData.reduce((s,d)=>s+d.fat,0)/weekData.length), goal: n.fat||60, color:"var(--primary)", icon:"🫒" },
+        ].map(m=>`
+          <div class="stat-card">
+            <div class="stat-icon">${m.icon}</div>
+            <div class="stat-label">${m.name}</div>
+            <div class="stat-val">${m.avg}g <span style="font-size:14px;font-weight:500;color:var(--muted-foreground)">/ ${m.goal}g</span></div>
+            <div class="progress-bar" style="margin-top:10px;height:6px">
+              <div class="progress-fill" style="width:${Math.min(100,Math.round(m.avg/m.goal*100))}%;background:${m.color}"></div>
+            </div>
+            <div class="stat-sub" style="margin-top:6px">${Math.round(m.avg/m.goal*100)}% da meta</div>
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <!-- Dica personalizada -->
+    <div style="background:#1f2922;border-radius:var(--radius-xl);padding:24px;margin-top:20px;display:flex;gap:16px;align-items:flex-start">
+      <div style="font-size:32px;flex-shrink:0">💡</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:6px">Dica personalizada</div>
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;margin:0;line-height:1.6">
+          Sua adesão nos fins de semana está um pouco mais baixa (60% no domingo). Tente pré-preparar as marmitas na sexta para garantir a consistência. Você está indo muito bem — <strong style="color:var(--warning)">5 dias consecutivos</strong> dentro da meta!
+        </p>
+      </div>
+    </div>
+  `;
+})();
+</script>
+</body>
+</html>

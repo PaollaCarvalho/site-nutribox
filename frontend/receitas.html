@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Receitas — NUTRIBOX</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/js/app.js"></script>
+<script src="/js/dashboard.js"></script>
+<script>
+(async () => {
+  const user = await setupDashboard("receitas");
+  if (!user) return;
+  const content = document.getElementById("content");
+
+  // Mock de receitas (em produção viria de /api/recipes)
+  const recipes = [
+    {
+      id: 1, fromNutri: true,
+      nutriName: "Dra. Ana Lima",
+      tag: "Jantar", emoji: "🐟",
+      name: "Salmão ao limão com brócolis",
+      desc: "Proteína nobre com gorduras boas e fibras. Indicado para jantar pós-treino.",
+      kcal: 490, protein: 44, carbs: 18, fat: 22,
+      prepTime: "20 min", portions: 1,
+      ingredients: [
+        "200g de filé de salmão", "1 xíc. de brócolis", "1 col. sopa de azeite",
+        "Suco de 1 limão", "Sal, pimenta e alho a gosto"
+      ],
+      steps: [
+        "Tempere o salmão com sal, pimenta e suco de limão. Deixe marinar por 10 min.",
+        "Aqueça uma frigideira com azeite e grelhe o salmão por 4 min de cada lado.",
+        "Cozinhe o brócolis no vapor por 5 min. Tempere com sal e alho.",
+        "Sirva o salmão sobre o brócolis e regue com o restante do limão."
+      ]
+    },
+    {
+      id: 2, fromNutri: true,
+      nutriName: "Dra. Ana Lima",
+      tag: "Almoço", emoji: "🍗",
+      name: "Frango grelhado com quinoa",
+      desc: "Refeição completa com alto teor proteico e carboidrato complexo de baixo índice glicêmico.",
+      kcal: 520, protein: 48, carbs: 44, fat: 12,
+      prepTime: "25 min", portions: 1,
+      ingredients: [
+        "180g de peito de frango", "½ xíc. de quinoa crua", "Folhas verdes a gosto",
+        "1 col. sopa de azeite", "Limão, sal e ervas finas"
+      ],
+      steps: [
+        "Cozinhe a quinoa em 1 xíc. de água por 12 min. Reserve.",
+        "Tempere o frango e grelhe em frigideira quente por 6 min de cada lado.",
+        "Fatie o frango e monte o prato com a quinoa e as folhas.",
+        "Regue com azeite e limão antes de servir."
+      ]
+    },
+    {
+      id: 3, fromNutri: false,
+      tag: "Café da manhã", emoji: "🥣",
+      name: "Açaí bowl proteico",
+      desc: "Bowl energético rico em antioxidantes e proteínas. Ótimo para começar o dia.",
+      kcal: 380, protein: 22, carbs: 54, fat: 10,
+      prepTime: "10 min", portions: 1,
+      ingredients: [
+        "200g de polpa de açaí", "1 scoop de whey baunilha",
+        "½ banana congelada", "3 col. sopa de granola",
+        "Frutas vermelhas a gosto"
+      ],
+      steps: [
+        "Bata o açaí com a banana e o whey no liquidificador até ficar cremoso.",
+        "Coloque em uma tigela e adicione a granola por cima.",
+        "Finalize com as frutas vermelhas e sirva gelado."
+      ]
+    },
+    {
+      id: 4, fromNutri: true,
+      nutriName: "Dra. Ana Lima",
+      tag: "Lanche", emoji: "🥚",
+      name: "Omelete de espinafre",
+      desc: "Rápido, nutritivo e saciante. Prescrito como lanche da tarde ou jantar leve.",
+      kcal: 260, protein: 26, carbs: 4, fat: 16,
+      prepTime: "10 min", portions: 1,
+      ingredients: [
+        "3 ovos inteiros", "1 xíc. de espinafre", "2 col. sopa de queijo cottage",
+        "1 col. chá de azeite", "Sal e pimenta a gosto"
+      ],
+      steps: [
+        "Bata os ovos com sal e pimenta.",
+        "Refogue o espinafre rapidamente em azeite.",
+        "Adicione os ovos à frigideira e espalhe o espinafre e o cottage.",
+        "Dobre a omelete ao meio e sirva quente."
+      ]
+    },
+    {
+      id: 5, fromNutri: false,
+      tag: "Pré-treino", emoji: "💪",
+      name: "Wrap integral de atum",
+      desc: "Carboidrato + proteína pré-treino. Prático e fácil de transportar.",
+      kcal: 310, protein: 32, carbs: 34, fat: 6,
+      prepTime: "8 min", portions: 1,
+      ingredients: [
+        "1 wrap de trigo integral", "1 lata de atum light", "½ cenoura ralada",
+        "Folhas de agrião", "1 col. sopa de cream cheese light"
+      ],
+      steps: [
+        "Escorra o atum e misture com o cream cheese.",
+        "Espalhe a mistura no wrap.",
+        "Adicione a cenoura ralada e o agrião.",
+        "Enrole firmemente e sirva imediatamente ou embale para levar."
+      ]
+    },
+    {
+      id: 6, fromNutri: false,
+      tag: "Jantar", emoji: "🍲",
+      name: "Caldo de frango proteico",
+      desc: "Caldo quente e reconfortante. Leve e cheio de nutrientes para o fim do dia.",
+      kcal: 222, protein: 26, carbs: 16, fat: 6,
+      prepTime: "30 min", portions: 2,
+      ingredients: [
+        "300g de frango desfiado", "2 cenouras", "1 chuchu",
+        "Gengibre fresco", "Cúrcuma, sal e coentro"
+      ],
+      steps: [
+        "Cozinhe o frango em 1L de água por 20 min. Desfie e reserve o caldo.",
+        "Adicione os legumes cortados ao caldo e cozinhe por 10 min.",
+        "Tempere com gengibre, cúrcuma e sal.",
+        "Finalize com o frango desfiado e sirva quente."
+      ]
+    }
+  ];
+
+  let activeFilter = "Todos";
+  let activeRecipe = null;
+  const filters = ["Todos", "Do nutri", "Café da manhã", "Almoço", "Lanche", "Pré-treino", "Jantar"];
+
+  const renderList = () => {
+    const filtered = recipes.filter(r => {
+      if (activeFilter === "Todos") return true;
+      if (activeFilter === "Do nutri") return r.fromNutri;
+      return r.tag === activeFilter;
+    });
+
+    content.innerHTML = `
+      <div class="between mb-6" style="flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="margin:0;font-size:22px;font-weight:800">Receitas</h2>
+          <p class="text-muted text-sm" style="margin:4px 0 0">Prescrições do seu nutricionista e receitas do cardápio.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" id="add-recipe-btn">+ Adicionar receita</button>
+      </div>
+
+      <!-- Filtros -->
+      <div class="tabs mb-6" style="display:flex">
+        ${filters.map(f=>`
+          <button class="${f===activeFilter?"active":""}" data-filter="${f}">${f}</button>`).join("")}
+      </div>
+
+      <!-- Grid de receitas -->
+      ${filtered.length === 0 ? `
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <h4>Nenhuma receita encontrada</h4>
+          <p>Tente outro filtro ou adicione uma nova receita.</p>
+        </div>` : `
+      <div class="grid grid-3" style="gap:16px">
+        ${filtered.map(r=>`
+          <div class="recipe-card" data-id="${r.id}" style="cursor:pointer">
+            <div class="recipe-card-img">${r.emoji}</div>
+            <div class="recipe-card-body">
+              <div class="recipe-card-tag">
+                ${r.fromNutri ? `👩‍⚕️ ${r.nutriName}` : '🍴 Cardápio NUTRIBOX'}
+              </div>
+              <h4>${r.name}</h4>
+              <p>${r.desc}</p>
+              <div class="recipe-card-meta">
+                <span>⏱ ${r.prepTime}</span>
+                <span>🔥 ${r.kcal} kcal</span>
+                <span>💪 ${r.protein}g prot</span>
+              </div>
+            </div>
+          </div>`).join("")}
+      </div>`}`;
+
+    // Filtros
+    content.querySelectorAll(".tabs button").forEach(btn => {
+      btn.addEventListener("click", () => { activeFilter = btn.dataset.filter; renderList(); });
+    });
+
+    // Abrir receita
+    content.querySelectorAll(".recipe-card[data-id]").forEach(card => {
+      card.addEventListener("click", () => {
+        activeRecipe = recipes.find(r => r.id === +card.dataset.id);
+        renderDetail();
+      });
+    });
+
+    // Botão adicionar
+    document.getElementById("add-recipe-btn").addEventListener("click", renderAddForm);
+  };
+
+  const renderDetail = () => {
+    const r = activeRecipe;
+    content.innerHTML = `
+      <button class="btn btn-ghost btn-sm" id="back-btn" style="margin-bottom:20px">← Voltar</button>
+      <div class="grid grid-2" style="gap:24px;align-items:start">
+        <div>
+          <div style="height:220px;background:var(--primary-soft);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:20px">
+            ${r.emoji}
+          </div>
+          <!-- Macros -->
+          <div class="section" style="margin-bottom:0">
+            <div class="section-hd"><h3>Informação nutricional</h3></div>
+            <div class="stats-bar" style="grid-template-columns:repeat(2,1fr)">
+              <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-label">Calorias</div><div class="stat-val">${r.kcal}</div></div>
+              <div class="stat-card"><div class="stat-icon">💪</div><div class="stat-label">Proteína</div><div class="stat-val">${r.protein}g</div></div>
+              <div class="stat-card"><div class="stat-icon">🌾</div><div class="stat-label">Carboidrato</div><div class="stat-val">${r.carbs}g</div></div>
+              <div class="stat-card"><div class="stat-icon">🫒</div><div class="stat-label">Gordura</div><div class="stat-val">${r.fat}g</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          ${r.fromNutri ? `<div class="pill pill-green" style="margin-bottom:14px">👩‍⚕️ Prescrita por ${r.nutriName}</div>` : ''}
+          <div class="pill pill-orange" style="margin-bottom:14px">${r.tag}</div>
+          <h2 style="margin:0 0 8px;font-size:26px;font-weight:800">${r.name}</h2>
+          <p class="text-muted" style="margin:0 0 24px">${r.desc}</p>
+
+          <div style="display:flex;gap:16px;margin-bottom:24px;font-size:14px;color:var(--muted-foreground)">
+            <span>⏱ ${r.prepTime}</span>
+            <span>🍽️ ${r.portions} porção</span>
+          </div>
+
+          <!-- Ingredientes -->
+          <div class="section" style="margin-bottom:16px">
+            <div class="section-hd"><h3>Ingredientes</h3></div>
+            <ul style="margin:0;padding:0;list-style:none">
+              ${r.ingredients.map(i=>`
+                <li style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px">
+                  <span style="color:var(--primary);font-weight:700">•</span>${i}
+                </li>`).join("")}
+            </ul>
+          </div>
+
+          <!-- Modo de preparo -->
+          <div class="section" style="margin-bottom:0">
+            <div class="section-hd"><h3>Modo de preparo</h3></div>
+            <ol style="margin:0;padding:0;list-style:none;counter-reset:steps">
+              ${r.steps.map((s,i)=>`
+                <li style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.55">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--foreground);color:var(--white);display:grid;place-items:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:1px">${i+1}</div>
+                  <span>${s}</span>
+                </li>`).join("")}
+            </ol>
+          </div>
+        </div>
+      </div>`;
+
+    document.getElementById("back-btn").addEventListener("click", renderList);
+  };
+
+  const renderAddForm = () => {
+    content.innerHTML = `
+      <button class="btn btn-ghost btn-sm" id="back-btn" style="margin-bottom:20px">← Voltar</button>
+      <div style="max-width:660px">
+        <h2 style="margin:0 0 6px;font-size:22px;font-weight:800">Adicionar receita do nutricionista</h2>
+        <p class="text-muted text-sm" style="margin:0 0 28px">Informe os dados da prescrição para incluir no seu cardápio personalizado.</p>
+
+        <div class="nutri-recipe-panel">
+          <h4>👩‍⚕️ Dados da prescrição</h4>
+          <p>Preencha as informações conforme indicado pelo seu nutricionista.</p>
+
+          <div class="grid grid-2" style="gap:12px;margin-top:4px">
+            <div class="field">
+              <label class="label">Nome da receita</label>
+              <input class="input" id="r-name" placeholder="ex: Frango ao curry com arroz" />
+            </div>
+            <div class="field">
+              <label class="label">Nome do nutricionista</label>
+              <input class="input" id="r-nutri" placeholder="Dr(a). Nome" />
+            </div>
+            <div class="field">
+              <label class="label">Tipo de refeição</label>
+              <select class="select" id="r-tag">
+                <option>Café da manhã</option>
+                <option>Almoço</option>
+                <option>Lanche</option>
+                <option>Pré-treino</option>
+                <option>Jantar</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="label">Tempo de preparo</label>
+              <input class="input" id="r-time" placeholder="ex: 20 min" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Descrição</label>
+            <textarea class="textarea" id="r-desc" placeholder="Descreva a receita e para que ela foi indicada..."></textarea>
+          </div>
+
+          <div class="grid grid-4" style="gap:10px">
+            <div class="field"><label class="label">Kcal</label><input class="input" id="r-kcal" type="number" placeholder="ex: 400" /></div>
+            <div class="field"><label class="label">Proteína (g)</label><input class="input" id="r-prot" type="number" placeholder="ex: 35" /></div>
+            <div class="field"><label class="label">Carbo (g)</label><input class="input" id="r-carbs" type="number" placeholder="ex: 40" /></div>
+            <div class="field"><label class="label">Gordura (g)</label><input class="input" id="r-fat" type="number" placeholder="ex: 12" /></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Ingredientes</label>
+            <p class="help">Um por linha. ex: 200g de frango, 1 xícara de arroz</p>
+            <textarea class="textarea" id="r-ingredients" placeholder="200g de peito de frango&#10;1 xícara de quinoa&#10;Folhas verdes a gosto" style="min-height:120px"></textarea>
+          </div>
+
+          <div class="field">
+            <label class="label">Modo de preparo</label>
+            <p class="help">Um passo por linha.</p>
+            <textarea class="textarea" id="r-steps" placeholder="Tempere o frango com sal e limão&#10;Grelhe por 6 minutos de cada lado&#10;Sirva com a quinoa cozida" style="min-height:140px"></textarea>
+          </div>
+
+          <button class="btn btn-primary btn-full" id="save-recipe-btn" style="margin-top:8px">
+            Salvar receita
+          </button>
+        </div>
+      </div>`;
+
+    document.getElementById("back-btn").addEventListener("click", renderList);
+    document.getElementById("save-recipe-btn").addEventListener("click", () => {
+      const name = document.getElementById("r-name").value.trim();
+      if (!name) { toast("Informe o nome da receita", "error"); return; }
+
+      const newRecipe = {
+        id: recipes.length + 1,
+        fromNutri: true,
+        nutriName: document.getElementById("r-nutri").value.trim() || "Nutricionista",
+        tag:       document.getElementById("r-tag").value,
+        emoji:     "🍽️",
+        name,
+        desc:      document.getElementById("r-desc").value.trim(),
+        kcal:      +document.getElementById("r-kcal").value || 0,
+        protein:   +document.getElementById("r-prot").value || 0,
+        carbs:     +document.getElementById("r-carbs").value || 0,
+        fat:       +document.getElementById("r-fat").value || 0,
+        prepTime:  document.getElementById("r-time").value.trim() || "–",
+        portions:  1,
+        ingredients: document.getElementById("r-ingredients").value.split("\n").filter(Boolean),
+        steps:       document.getElementById("r-steps").value.split("\n").filter(Boolean),
+      };
+      recipes.unshift(newRecipe);
+      toast("Receita adicionada com sucesso! 🎉");
+      setTimeout(renderList, 400);
+    });
+  };
+
+  renderList();
+})();
+</script>
+</body>
+</html>

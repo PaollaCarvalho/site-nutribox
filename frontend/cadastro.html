@@ -3,123 +3,498 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cadastro — NUTRIBOX</title>
+  <title>Criar conta — NUTRIBOX</title>
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
-  <div class="page-narrow">
-    <a href="/" class="brand">
-      <span class="brand-icon">🌱</span>
-      <span class="brand-name"><span class="accent">NUTRI</span>BOX</span>
-    </a>
-
-    <div class="card card-pad" style="width:100%;max-width:640px">
-      <h1 class="title">Crie sua conta</h1>
-      <p class="subtitle">Conte um pouco sobre você para personalizarmos seu cardápio.</p>
-
-      <form id="form" style="margin-top:24px">
-        <div class="field">
-          <label class="label">Nome completo</label>
-          <input class="input" id="fullName" required minlength="3" maxlength="100" />
-        </div>
-
-        <div class="grid grid-2">
-          <div class="field">
-            <label class="label">E-mail</label>
-            <input class="input" id="email" type="email" required maxlength="255" />
-          </div>
-          <div class="field">
-            <label class="label">Senha</label>
-            <input class="input" id="password" type="password" required minlength="6" maxlength="100" />
-          </div>
-        </div>
-
-        <div class="grid grid-3">
-          <div class="field">
-            <label class="label">Idade</label>
-            <input class="input" id="age" type="number" min="12" max="120" required />
-          </div>
-          <div class="field">
-            <label class="label">Peso (kg)</label>
-            <input class="input" id="weight" type="number" step="0.1" min="30" max="300" required />
-          </div>
-          <div class="field">
-            <label class="label">Altura (cm)</label>
-            <input class="input" id="height" type="number" min="100" max="250" required />
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Objetivo físico</label>
-          <select class="select" id="goal">
-            <option value="manutencao">Manutenção</option>
-            <option value="emagrecimento">Emagrecimento</option>
-            <option value="ganho_massa">Ganho de massa</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label class="label">Restrições alimentares</label>
-          <div class="grid grid-4" id="restrictions"></div>
-        </div>
-
-        <button class="btn btn-primary btn-full" type="submit" id="submit">Continuar</button>
-      </form>
-
-      <p style="text-align:center;margin-top:24px;font-size:14px;color:var(--muted-foreground)">
-        Já tem conta? <a href="/login.html" style="color:var(--primary);font-weight:500">Entrar</a>
-      </p>
+<div class="page-auth">
+  <!-- LADO ESQUERDO -->
+  <div class="auth-left">
+    <div>
+      <a href="/" class="brand" style="color:#fff">
+        <img src="/img/logo.png" alt="NUTRIBOX" style="width:56px; height:56px; object-fit:contain; border-radius:10px;" />
+        <span class="brand-name"><span class="accent">NUTRI</span>BOX</span>
+      </a>
+    </div>
+    <div class="auth-left-content">
+      <div class="auth-tagline">
+        Sua dieta.<br>Seu ritmo.<br><span class="accent">Seu resultado.</span>
+      </div>
+      <p>Monte seu plano alimentar em minutos. Marmitas personalizadas chegam na sua porta toda semana.</p>
+    </div>
+    <div class="auth-testimonial">
+      <p>"Perdi 8 kg em 3 meses sem me preocupar com o que comer. A NUTRIBOX cuida de tudo."</p>
+      <div class="who">— Mariana S., São Paulo</div>
     </div>
   </div>
 
-  <script src="/js/app.js"></script>
-  <script>
-    const selected = new Set();
-    (async () => {
+  <!-- LADO DIREITO -->
+  <div class="auth-right">
+    <div class="auth-box" style="max-width:580px">
+
+      <!-- Progress steps -->
+      <div id="progress-steps" style="display:flex;gap:8px;margin-bottom:32px;align-items:center">
+        <div class="step-dot active" data-step="1">1</div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="2">2</div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="3">3</div>
+      </div>
+
+      <style>
+        .step-dot {
+          width: 32px; height: 32px; border-radius: 50%;
+          display: grid; place-items: center; font-size: 13px; font-weight: 700;
+          border: 2px solid var(--border); color: var(--muted-foreground); flex-shrink: 0;
+          transition: all 0.2s;
+        }
+        .step-dot.active { background: #1f2922; border-color: var(--foreground); color: #fff; }
+        .step-dot.done { background: var(--green-100); border-color: var(--primary); color: var(--foreground); }
+        .step-line { flex: 1; height: 2px; background: var(--border); border-radius: 1px; }
+        .step-line.done { background: var(--primary); }
+      </style>
+
+      <!-- PASSO 1: Dados pessoais -->
+      <div id="step-1">
+        <div class="step-label">Etapa 1 de 3</div>
+        <h1 class="auth-title">Crie sua conta</h1>
+        <p class="auth-sub">Dados básicos para personalizar seu cardápio.</p>
+
+        <form id="form-1">
+          <div class="field">
+            <label class="label">Nome completo</label>
+            <input class="input" id="fullName" required minlength="3" maxlength="100" placeholder="Seu nome" />
+          </div>
+          <div class="grid grid-2">
+            <div class="field">
+              <label class="label">E-mail</label>
+              <input class="input" id="email" type="email" required placeholder="voce@email.com" />
+            </div>
+            <div class="field">
+              <label class="label">Senha</label>
+              <input class="input" id="password" type="password" required minlength="6" placeholder="Mínimo 6 caracteres" />
+            </div>
+          </div>
+          <div class="grid grid-3">
+            <div class="field">
+              <label class="label">Idade</label>
+              <input class="input" id="age" type="number" min="12" max="120" required placeholder="ex: 28" />
+            </div>
+            <div class="field">
+              <label class="label">Peso (kg)</label>
+              <input class="input" id="weight" type="number" step="0.1" min="30" max="300" required placeholder="ex: 70" />
+            </div>
+            <div class="field">
+              <label class="label">Altura (cm)</label>
+              <input class="input" id="height" type="number" min="100" max="250" required placeholder="ex: 170" />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Objetivo físico</label>
+            <select class="select" id="goal">
+              <option value="emagrecimento">🎯 Emagrecimento</option>
+              <option value="ganho_massa">💪 Ganho de massa</option>
+              <option value="manutencao">⚖️ Manutenção</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label">Restrições alimentares</label>
+            <div class="grid grid-4" id="restrictions" style="gap:8px"></div>
+          </div>
+          <button class="btn btn-primary btn-full" type="submit" id="btn-1" style="margin-top:8px">
+            Próximo: Plano alimentar →
+          </button>
+        </form>
+        <p style="text-align:center;margin-top:20px;font-size:14px;color:var(--muted-foreground)">
+          Já tem conta? <a href="/login.html" style="color:var(--primary);font-weight:600">Entrar</a>
+        </p>
+      </div>
+
+      <!-- PASSO 2: Plano alimentar / Receita nutri -->
+      <div id="step-2" style="display:none">
+        <div class="step-label">Etapa 2 de 3</div>
+        <h1 class="auth-title">Seu plano alimentar</h1>
+        <p class="auth-sub">Você tem prescrição de um nutricionista ou quer que o algoritmo monte pra você?</p>
+
+        <!-- Opções de origem -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px" id="origin-selector">
+          <label id="opt-algo" class="origin-opt selected" onclick="selectOrigin('algo')">
+            <input type="radio" name="origin" value="algo" checked style="display:none">
+            <div style="font-size:28px;margin-bottom:8px">🤖</div>
+            <div style="font-weight:700;font-size:15px">Algoritmo NUTRIBOX</div>
+            <div style="font-size:13px;color:var(--muted-foreground);margin-top:4px">Calculamos seus macros automaticamente pelo seu objetivo.</div>
+          </label>
+          <label id="opt-nutri" class="origin-opt" onclick="selectOrigin('nutri')">
+            <input type="radio" name="origin" value="nutri" style="display:none">
+            <div style="font-size:28px;margin-bottom:8px">👩‍⚕️</div>
+            <div style="font-weight:700;font-size:15px">Receita do nutricionista</div>
+            <div style="font-size:13px;color:var(--muted-foreground);margin-top:4px">Tenho prescrição e quero seguir exatamente o que foi indicado.</div>
+          </label>
+        </div>
+        <style>
+          .origin-opt {
+            border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px;
+            text-align: center; cursor: pointer; transition: all 0.18s; background: var(--white); display: block;
+          }
+          .origin-opt:hover { border-color: var(--primary); background: var(--primary-soft); }
+          .origin-opt.selected { border-color: var(--primary); background: var(--primary-soft); }
+        </style>
+
+        <!-- PAINEL ALGORITMO -->
+        <div id="panel-algo">
+          <div class="nutri-recipe-panel" style="background:var(--primary-soft);border-color:var(--green-100)">
+            <h4>⚡ Cálculo automático</h4>
+            <p style="font-size:13px;color:var(--muted-foreground);margin-top:4px;margin-bottom:16px">
+              Com base no seu peso, altura, idade e objetivo, calculamos os macros ideais. Você pode ajustar depois.
+            </p>
+            <div class="grid grid-2" style="gap:12px" id="auto-macros-preview">
+              <!-- preenchido por JS -->
+            </div>
+          </div>
+          <div class="grid grid-2" style="gap:12px">
+            <div class="field">
+              <label class="label">Proteína por dia (g)</label>
+              <input class="input" id="a-protein" type="number" min="0" max="500" />
+            </div>
+            <div class="field">
+              <label class="label">Carboidratos por dia (g)</label>
+              <input class="input" id="a-carbs" type="number" min="0" max="600" />
+            </div>
+            <div class="field">
+              <label class="label">Gordura por dia (g)</label>
+              <input class="input" id="a-fat" type="number" min="0" max="300" />
+            </div>
+            <div class="field">
+              <label class="label">Refeições por dia</label>
+              <select class="select" id="a-meals-count">
+                <option value="3">3 refeições</option>
+                <option value="4">4 refeições</option>
+                <option value="5" selected>5 refeições</option>
+                <option value="6">6 refeições</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL NUTRICIONISTA -->
+        <div id="panel-nutri" style="display:none">
+          <div class="nutri-recipe-panel">
+            <h4>👩‍⚕️ Receita do nutricionista</h4>
+            <p>Informe os dados da sua prescrição. Usaremos exatamente esses valores para montar as marmitas.</p>
+
+            <div class="field">
+              <label class="label">Nome do nutricionista (opcional)</label>
+              <input class="input" id="n-nutri-name" placeholder="Dr(a). Maria Silva" />
+            </div>
+            <div class="field">
+              <label class="label">Nome do plano / dieta</label>
+              <input class="input" id="n-plan-name" placeholder="ex: Low Carb Fase 1, Dieta Hipertrófica..." />
+            </div>
+            <div class="grid grid-2" style="gap:12px;margin-top:4px">
+              <div class="field">
+                <label class="label">Proteína/dia (g)</label>
+                <input class="input" id="n-protein" type="number" min="0" max="500" placeholder="ex: 150" />
+              </div>
+              <div class="field">
+                <label class="label">Carbo/dia (g)</label>
+                <input class="input" id="n-carbs" type="number" min="0" max="600" placeholder="ex: 200" />
+              </div>
+              <div class="field">
+                <label class="label">Gordura/dia (g)</label>
+                <input class="input" id="n-fat" type="number" min="0" max="300" placeholder="ex: 60" />
+              </div>
+              <div class="field">
+                <label class="label">Refeições por dia</label>
+                <select class="select" id="n-meals-count">
+                  <option value="3">3 refeições</option>
+                  <option value="4">4 refeições</option>
+                  <option value="5" selected>5 refeições</option>
+                  <option value="6">6 refeições</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field" style="margin-top:4px">
+              <label class="label">Observações da prescrição</label>
+              <textarea class="textarea" id="n-obs" placeholder="ex: Evitar carboidratos simples à noite, preferência por frango e peixe, sem laticínios..."></textarea>
+            </div>
+
+            <!-- Alimentos específicos -->
+            <div class="field" style="margin-top:4px">
+              <label class="label">Alimentos prescritos (opcional)</label>
+              <p class="help">Liste os alimentos que o nutri indicou — vamos priorizar nas marmitas.</p>
+              <div id="ingredient-list"></div>
+              <button type="button" class="btn btn-outline btn-sm" id="add-ingredient" style="margin-top:8px">
+                + Adicionar alimento
+              </button>
+            </div>
+
+            <!-- Upload de prescrição -->
+            <div class="field">
+              <label class="label">Arquivo da prescrição (opcional)</label>
+              <div id="upload-area" style="
+                border: 2px dashed var(--border-strong); border-radius: var(--radius);
+                padding: 24px; text-align: center; cursor: pointer; transition: all 0.18s;
+                background: var(--white);">
+                <div style="font-size:28px;margin-bottom:8px">📄</div>
+                <div style="font-size:14px;font-weight:600;color:var(--foreground)">Arraste ou clique para enviar</div>
+                <div style="font-size:12px;color:var(--muted-foreground);margin-top:4px">PDF, JPG ou PNG — máx. 5MB</div>
+                <input type="file" id="n-prescription-file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" />
+              </div>
+              <div id="upload-preview" style="display:none;margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:8px">
+          <button class="btn btn-outline" type="button" onclick="goStep(1)">← Voltar</button>
+          <button class="btn btn-primary btn-full" type="button" id="btn-2" onclick="goStep(3)">
+            Próximo: Escolher plano →
+          </button>
+        </div>
+      </div>
+
+      <!-- PASSO 3: Plano de entrega -->
+      <div id="step-3" style="display:none">
+        <div class="step-label">Etapa 3 de 3</div>
+        <h1 class="auth-title">Escolha seu plano</h1>
+        <p class="auth-sub">Frequência de entrega. Cancele quando quiser.</p>
+        <div id="plans-grid" style="display:grid;grid-template-columns:1fr;gap:12px"></div>
+        <div style="display:flex;gap:12px;margin-top:16px">
+          <button class="btn btn-outline" type="button" onclick="goStep(2)">← Voltar</button>
+        </div>
+        <p style="text-align:center;margin-top:20px;font-size:14px;color:var(--muted-foreground)">
+          Já tem conta? <a href="/login.html" style="color:var(--primary);font-weight:600">Entrar</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+  // ─── Estado do formulário
+  let formData = { restrictions: new Set(), origin: 'algo', ingredients: [] };
+  let currentStep = 1;
+
+  // ─── Restrições
+  (async () => {
+    try {
       const { restrictions } = await api("/api/restrictions");
       const wrap = document.getElementById("restrictions");
       wrap.innerHTML = restrictions.map(r => `
         <label class="check" data-r="${r}">
-          <input type="checkbox" />
-          <span>${r}</span>
+          <input type="checkbox" /><span>${r}</span>
         </label>`).join("");
       wrap.querySelectorAll(".check").forEach(el => {
-        el.addEventListener("click", (e) => {
+        el.addEventListener("click", e => {
           e.preventDefault();
           const r = el.dataset.r;
           const input = el.querySelector("input");
-          if (selected.has(r)) { selected.delete(r); input.checked = false; el.classList.remove("checked"); }
-          else { selected.add(r); input.checked = true; el.classList.add("checked"); }
+          if (formData.restrictions.has(r)) {
+            formData.restrictions.delete(r); input.checked = false; el.classList.remove("checked");
+          } else {
+            formData.restrictions.add(r); input.checked = true; el.classList.add("checked");
+          }
         });
       });
-    })();
+    } catch(e) {}
+  })();
 
-    document.getElementById("form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById("submit");
-      btn.disabled = true; btn.textContent = "Criando...";
-      try {
-        const data = await api("/api/signup", {
-          method: "POST",
-          body: {
-            fullName: document.getElementById("fullName").value.trim(),
-            email: document.getElementById("email").value.trim(),
-            password: document.getElementById("password").value,
-            age: +document.getElementById("age").value,
-            weight: +document.getElementById("weight").value,
-            height: +document.getElementById("height").value,
-            goal: document.getElementById("goal").value,
-            restrictions: [...selected],
-          },
-        });
-        Storage.token = data.token;
-        toast("Cadastro criado! Vamos configurar suas metas.");
-        setTimeout(() => location.href = "/configuracao.html", 400);
-      } catch (err) {
-        toast(err.message, "error");
-        btn.disabled = false; btn.textContent = "Continuar";
-      }
+  // ─── Planos (etapa 3)
+  (async () => {
+    try {
+      const { plans } = await api("/api/plans");
+      renderPlans(plans);
+    } catch(e) {
+      renderPlans([
+        { name: "Semanal", price: 89, period: "/semana", type: "semanal", features: ["7 dias", "3 refeições/dia"], highlighted: false },
+        { name: "Mensal", price: 299, period: "/mês", type: "mensal", features: ["30 dias", "3 refeições/dia", "Receita do nutri"], highlighted: true },
+        { name: "Anual", price: 249, period: "/mês", type: "anual", features: ["Tudo do Mensal", "2 meses grátis"], highlighted: false },
+      ]);
+    }
+  })();
+
+  function renderPlans(plans) {
+    document.getElementById("plans-grid").innerHTML = plans.map(p => `
+      <div class="plan ${p.highlighted ? "highlighted" : ""}" style="padding:20px;flex-direction:row;align-items:center;gap:16px;flex-wrap:wrap">
+        ${p.highlighted ? '<span class="badge" style="position:static;transform:none;margin-bottom:0">🔥 Popular</span>' : ''}
+        <div style="flex:1;min-width:120px">
+          <div class="plan-name">${p.name}</div>
+          <div class="price" style="margin-top:4px"><strong style="font-size:26px">${fmtCurrency(p.price)}</strong><span>${p.period}</span></div>
+        </div>
+        <ul style="margin:0;padding:0;flex:2;min-width:160px">
+          ${p.features.map(f => `<li style="padding:3px 0"><span class="check-icon" style="color:var(--primary);font-weight:700;margin-right:6px">✓</span>${f}</li>`).join("")}
+        </ul>
+        <button class="btn ${p.highlighted ? "btn-accent" : "btn-primary"}" data-plan="${p.type}" id="plan-btn-${p.type}">
+          Escolher
+        </button>
+      </div>`).join("");
+
+    document.querySelectorAll("[data-plan]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        btn.disabled = true; btn.textContent = "Criando conta...";
+        try {
+          // Monta payload
+          const nutrition = formData.origin === 'nutri' ? {
+            protein: +document.getElementById("n-protein").value || 0,
+            carbs:   +document.getElementById("n-carbs").value   || 0,
+            fat:     +document.getElementById("n-fat").value     || 0,
+            totalGrams: 350,
+            fromNutri: true,
+            nutriName:  document.getElementById("n-nutri-name").value.trim(),
+            planName:   document.getElementById("n-plan-name").value.trim(),
+            obs:        document.getElementById("n-obs").value.trim(),
+            ingredients: formData.ingredients,
+          } : {
+            protein: +document.getElementById("a-protein").value || 0,
+            carbs:   +document.getElementById("a-carbs").value   || 0,
+            fat:     +document.getElementById("a-fat").value     || 0,
+            totalGrams: 350,
+            fromNutri: false,
+          };
+
+          const data = await api("/api/signup", {
+            method: "POST",
+            body: {
+              fullName:     document.getElementById("fullName").value.trim(),
+              email:        document.getElementById("email").value.trim(),
+              password:     document.getElementById("password").value,
+              age:          +document.getElementById("age").value,
+              weight:       +document.getElementById("weight").value,
+              height:       +document.getElementById("height").value,
+              goal:         document.getElementById("goal").value,
+              restrictions: [...formData.restrictions],
+              nutrition,
+              plan: btn.dataset.plan,
+            },
+          });
+          Storage.token = data.token;
+          toast("Conta criada! Bem-vindo à NUTRIBOX 🎉");
+          setTimeout(() => location.href = "/inicio.html", 500);
+        } catch(err) {
+          toast(err.message, "error");
+          btn.disabled = false; btn.textContent = "Escolher";
+        }
+      });
     });
-  </script>
+  }
+
+  // ─── Navegação de steps
+  function goStep(n) {
+    if (n === 2 && currentStep === 1) {
+      const f = document.getElementById("form-1");
+      if (!f.checkValidity()) { f.reportValidity(); return; }
+      calcAutoMacros();
+    }
+    document.getElementById("step-" + currentStep).style.display = "none";
+    document.getElementById("step-" + n).style.display = "";
+    currentStep = n;
+    updateStepUI();
+  }
+
+  function updateStepUI() {
+    document.querySelectorAll(".step-dot").forEach(d => {
+      const s = +d.dataset.step;
+      d.classList.toggle("active", s === currentStep);
+      d.classList.toggle("done", s < currentStep);
+      if (s < currentStep) d.textContent = "✓";
+      else d.textContent = s;
+    });
+    document.querySelectorAll(".step-line").forEach((l, i) => {
+      l.classList.toggle("done", i + 1 < currentStep);
+    });
+  }
+
+  document.getElementById("form-1").addEventListener("submit", e => { e.preventDefault(); goStep(2); });
+
+  // ─── Seleção de origem
+  function selectOrigin(val) {
+    formData.origin = val;
+    document.getElementById("opt-algo").classList.toggle("selected", val === "algo");
+    document.getElementById("opt-nutri").classList.toggle("selected", val === "nutri");
+    document.getElementById("panel-algo").style.display = val === "algo" ? "" : "none";
+    document.getElementById("panel-nutri").style.display = val === "nutri" ? "" : "none";
+  }
+
+  // ─── Cálculo automático de macros (fórmula simples)
+  function calcAutoMacros() {
+    const w = +document.getElementById("weight").value;
+    const h = +document.getElementById("height").value;
+    const a = +document.getElementById("age").value;
+    const goal = document.getElementById("goal").value;
+
+    // Harris-Benedict simplificado (masculino como base média)
+    let bmr = 10 * w + 6.25 * h - 5 * a + 5;
+    let tdee = bmr * 1.4; // fator atividade moderada
+    if (goal === "emagrecimento") tdee *= 0.8;
+    if (goal === "ganho_massa")   tdee *= 1.15;
+
+    const prot = Math.round(w * 1.8);
+    const fat  = Math.round(w * 0.8);
+    const carbs = Math.round((tdee - prot * 4 - fat * 9) / 4);
+
+    document.getElementById("a-protein").value = prot;
+    document.getElementById("a-carbs").value = Math.max(carbs, 50);
+    document.getElementById("a-fat").value = fat;
+
+    const kcal = Math.round(tdee);
+    document.getElementById("auto-macros-preview").innerHTML = `
+      <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-label">Meta calórica</div><div class="stat-val">${kcal}</div><div class="stat-sub">kcal/dia</div></div>
+      <div class="stat-card"><div class="stat-icon">💪</div><div class="stat-label">Proteína</div><div class="stat-val">${prot}g</div><div class="stat-sub">por dia</div></div>
+    `;
+  }
+
+  // ─── Alimentos / ingredientes
+  document.getElementById("add-ingredient").addEventListener("click", () => {
+    const idx = formData.ingredients.length;
+    formData.ingredients.push({ name: "", qty: "" });
+    const row = document.createElement("div");
+    row.className = "ingredient-row";
+    row.innerHTML = `
+      <input class="input" placeholder="Alimento (ex: frango, ovo, batata doce)" data-idx="${idx}" data-field="name" />
+      <input class="input" style="max-width:100px" placeholder="Qtd. (ex: 200g)" data-idx="${idx}" data-field="qty" />
+      <button type="button" class="remove-btn" data-idx="${idx}">×</button>`;
+    document.getElementById("ingredient-list").appendChild(row);
+    row.querySelectorAll("[data-field]").forEach(inp => {
+      inp.addEventListener("input", e => {
+        formData.ingredients[+e.target.dataset.idx][e.target.dataset.field] = e.target.value;
+      });
+    });
+    row.querySelector(".remove-btn").addEventListener("click", e => {
+      row.remove();
+      formData.ingredients.splice(+e.target.dataset.idx, 1);
+    });
+  });
+
+  // ─── Upload de prescrição
+  const uploadArea = document.getElementById("upload-area");
+  const fileInput  = document.getElementById("n-prescription-file");
+  uploadArea.addEventListener("click", () => fileInput.click());
+  uploadArea.addEventListener("dragover", e => { e.preventDefault(); uploadArea.style.borderColor = "var(--primary)"; });
+  uploadArea.addEventListener("dragleave", () => { uploadArea.style.borderColor = ""; });
+  uploadArea.addEventListener("drop", e => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener("change", e => handleFile(e.target.files[0]));
+  function handleFile(file) {
+    if (!file) return;
+    uploadArea.style.borderColor = "var(--primary)";
+    document.getElementById("upload-preview").style.display = "";
+    document.getElementById("upload-preview").innerHTML = `
+      <div class="row" style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:10px 14px">
+        <span style="font-size:20px">📄</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${file.name}</div>
+          <div style="font-size:12px;color:var(--muted-foreground)">${(file.size/1024).toFixed(0)} KB</div>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="clearFile()">✕</button>
+      </div>`;
+  }
+  function clearFile() {
+    fileInput.value = "";
+    document.getElementById("upload-preview").style.display = "none";
+    uploadArea.style.borderColor = "";
+  }
+</script>
 </body>
 </html>

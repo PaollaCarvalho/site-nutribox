@@ -3,51 +3,293 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NUTRIBOX — Marmitas fitness sob medida</title>
-  <meta name="description" content="Cardápio personalizado, metas nutricionais e entregas no seu ritmo. Comece sua jornada fitness com a NUTRIBOX." />
+  <title>NUTRIBOX — Entregando saúde na quantidade certa</title>
+  <meta name="description" content="Marmitas fitness personalizadas com algoritmo nutricional. Entregando saúde na quantidade certa." />
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
-  <div id="header"></div>
+<div id="header"></div>
 
-  <section class="hero container">
-    <span class="pill">🌿 Nutrição inteligente, sabor de verdade</span>
-    <h1><span class="accent">NUTRI</span>BOX</h1>
-    <p>Defina suas metas de macros, escolha seu plano e receba refeições personalizadas geradas por algoritmo nutricional, prontas pra esquentar.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="/cadastro.html">Criar minha conta</a>
-      <a class="btn btn-outline btn-lg" href="/login.html">Já sou cliente</a>
+<!-- HERO -->
+<section class="hero container">
+  <!-- Logo -->
+ <img src="/img/logo.png" alt="NUTRIBOX" class="hero-logo" style="width:420px; height:420px; object-fit:contain; margin-top:-160px; margin-bottom:-90px;" onerror="this.style.display='none'"/>
+  <div class="hero-eyebrow">🌿 Entregando saúde na quantidade certa</div>
+  <p class="hero-sub">
+    Defina suas metas, receba marmitas personalizadas por algoritmo nutricional e acompanhe cada macro — sem complicação.
+  </p>
+  <div class="hero-actions">
+    <a class="btn btn-primary btn-lg" href="/cadastro.html">Montar meu plano →</a>
+    <a class="btn btn-outline btn-lg" href="#como-funciona">Como funciona</a>
+  </div>
+  <!-- Strip de marmitas -->
+  <div class="hero-strip">
+    <div class="hero-marmita">
+      <div class="tag">☀️ Café da manhã</div>
+      <div class="nome">Bowl proteico de açaí</div>
+      <span class="kcal">🔥 380 kcal</span>
     </div>
-  </section>
+    <div class="hero-marmita">
+      <div class="tag">🍽️ Almoço</div>
+      <div class="nome">Frango + quinoa</div>
+      <span class="kcal">🔥 520 kcal</span>
+    </div>
+    <div class="hero-marmita">
+      <div class="tag">🥤 Pré-treino</div>
+      <div class="nome">Wrap integral de atum</div>
+      <span class="kcal">🔥 310 kcal</span>
+    </div>
+    <div class="hero-marmita">
+      <div class="tag">🌙 Jantar</div>
+      <div class="nome">Salmão + brócolis</div>
+      <span class="kcal">🔥 490 kcal</span>
+    </div>
+    <div class="hero-marmita">
+      <div class="tag">🍎 Lanche</div>
+      <div class="nome">Iogurte grego + granola</div>
+      <span class="kcal">🔥 220 kcal</span>
+    </div>
+  </div>
+</section>
 
-  <section class="features container">
+<!-- NÚMEROS -->
+<section class="numbers-bar">
+  <div class="container">
+    <div class="grid grid-4" style="gap:20px">
+      <div class="num-item"><div class="num-val green">12k+</div><div class="num-label">clientes ativos</div></div>
+      <div class="num-item"><div class="num-val">98%</div><div class="num-label">de aprovação</div></div>
+      <div class="num-item"><div class="num-val green">5M+</div><div class="num-label">marmitas entregues</div></div>
+      <div class="num-item"><div class="num-val">24h</div><div class="num-label">antecedência na entrega</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSÃO E VALORES -->
+<section class="values-section" id="missao">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-eyebrow">Nossa missão</div>
+    </div>
+    <div class="mission-box">
+      <div class="label">O que nos move</div>
+      <p>
+        Ajudar pessoas com rotinas intensas a manterem uma
+        <span>alimentação saudável e personalizada</span>,
+        superando a falta de tempo e o cansaço diário —
+        sem recorrer a ultraprocessados e sem comprometer o orçamento.
+      </p>
+    </div>
+
+    <div class="features-header" style="margin-bottom:28px">
+      <div class="section-eyebrow">Nossos valores</div>
+      <h2 class="section-title">O que guia cada marmita</h2>
+    </div>
     <div class="grid grid-3">
-      <div class="feature">
-        <div class="icon">🎯</div>
-        <h3>Metas personalizadas</h3>
-        <p>Defina proteína, carbo e gordura por refeição. O cardápio se adapta a você.</p>
+      <div class="value-card">
+        <div class="v-icon">🎯</div>
+        <h4>Personalização real</h4>
+        <p>Cada cardápio é calculado para o seu corpo, seu objetivo e suas restrições. Sem plano genérico.</p>
       </div>
-      <div class="feature">
-        <div class="icon">🥗</div>
-        <h3>Cardápio inteligente</h3>
-        <p>Variedade semanal gerada por algoritmo, respeitando restrições alimentares.</p>
+      <div class="value-card">
+        <div class="v-icon">🥦</div>
+        <h4>Saúde sem sacrifício</h4>
+        <p>Comida de verdade, gostosa e nutritiva. Acreditamos que comer bem não precisa ser sofrimento.</p>
       </div>
-      <div class="feature">
-        <div class="icon">🚚</div>
-        <h3>Entregas no ritmo certo</h3>
-        <p>Planos semanal, mensal ou anual. Receba fresquinho onde estiver.</p>
+      <div class="value-card">
+        <div class="v-icon">🤝</div>
+        <h4>Parceria com nutricionistas</h4>
+        <p>Trabalhamos lado a lado com profissionais de nutrição para garantir precisão e segurança alimentar.</p>
+      </div>
+      <div class="value-card">
+        <div class="v-icon">⏱️</div>
+        <h4>Respeito ao seu tempo</h4>
+        <p>Você não precisa planejar nem cozinhar. A gente cuida de tudo — você só aquece e come.</p>
+      </div>
+      <div class="value-card">
+        <div class="v-icon">💰</div>
+        <h4>Preço justo</h4>
+        <p>Alimentação saudável acessível. Nossos planos cabem no orçamento sem abrir mão da qualidade.</p>
+      </div>
+      <div class="value-card">
+        <div class="v-icon">🔬</div>
+        <h4>Tecnologia a favor da saúde</h4>
+        <p>Algoritmo genético baseado na tabela TACO (UNICAMP) garante cardápios precisos e variados toda semana.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer class="site-footer">
-    <div class="container">© <span id="year"></span> Paola e Bruno. Todos os direitos reservados.</div>
-  </footer>
+<!-- DIFERENCIAIS -->
+<section class="features" id="diferenciais">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-eyebrow">Por que a NUTRIBOX</div>
+      <h2 class="section-title">Tudo que você precisa<br>para comer melhor</h2>
+      <p class="section-sub">Tecnologia nutricional + marmitas ultracongeladas: a combinação que funciona.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Metas personalizadas</h3>
+        <p>Algoritmo genético calcula seu cardápio com base nos seus macros, objetivo e restrições alimentares.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Receita do nutricionista</h3>
+        <p>Tem prescrição? Importe diretamente e receba as marmitas montadas exatamente como indicado.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Painel de progresso</h3>
+        <p>Acompanhe calorias, macros e evolução semanal. Veja se está no caminho certo para sua meta.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚚</div>
+        <h3>Marmitas ultracongeladas</h3>
+        <p>Chegam prontas. No freezer duram até 30 dias com toda qualidade nutricional preservada.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚫</div>
+        <h3>Restrições respeitadas</h3>
+        <p>Sem glúten, sem lactose, vegano, low carb — o sistema adapta cada marmita ao seu perfil.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Cardápio que muda toda semana</h3>
+        <p>Variedade garantida. Rotação automática para você não enjoar e manter a adesão lá em cima.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <script src="/js/app.js"></script>
-  <script>
-    renderHeader(document.getElementById("header"));
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+<!-- COMO FUNCIONA -->
+<section class="how-it-works" id="como-funciona">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-eyebrow">Simples assim</div>
+      <h2 class="section-title">Do cadastro ao prato em 4 passos</h2>
+    </div>
+    <div class="step-grid">
+      <div class="step-item hl">
+        <div class="step-num">1</div>
+        <h4>Crie sua conta</h4>
+        <p>Dados físicos, objetivo e restrições. Menos de 3 minutos.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <h4>Configure os macros</h4>
+        <p>Pelo algoritmo ou importando a receita do seu nutri.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <h4>Escolha o plano</h4>
+        <p>Semanal, quinzenal ou mensal. Cancele quando quiser.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <h4>Receba e coma</h4>
+        <p>Marmitas chegam congeladas. Só esquentar e curtir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section class="plans-section" id="planos">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-eyebrow">Planos e preços</div>
+      <h2 class="section-title">Escolha a frequência</h2>
+      <p class="section-sub">Sem taxa de adesão. Cancele quando quiser.</p>
+    </div>
+    <div class="grid grid-3" id="plans-preview" style="max-width:860px;margin:0 auto"></div>
+    <p style="text-align:center;margin-top:22px;font-size:13px;color:var(--muted-foreground)">
+      Todos os planos incluem painel de progresso e suporte 7 dias por semana.
+    </p>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section style="background:#1f2922;padding:64px 0;text-align:center">
+  <div class="container">
+    <img src="/img/logo.png" alt="NUTRIBOX" style="width:72px;height:72px;object-fit:contain;margin:0 auto 20px;border-radius:18px" onerror="this.style.display='none'"/>
+    <h2 style="font-size:clamp(22px,5vw,38px);font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 12px">
+      Pronto pra comer bem <span style="color:var(--primary-soft)">todo dia?</span>
+    </h2>
+    <p style="color:rgba(255,255,255,0.5);font-size:15px;max-width:380px;margin:0 auto 28px">
+      Junte-se a mais de 12 mil pessoas que transformaram a alimentação com a NUTRIBOX.
+    </p>
+    <a class="btn btn-primary btn-xl" href="/cadastro.html">Montar meu plano agora →</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="brand">
+          <span class="brand-icon">🥗</span>
+          <span class="brand-name" style="font-family: 'Playfair Display', serif; font-weight: 700;">
+            <span class="accent">NUTRI</span>BOX
+          </span>
+        </a>
+        <p style="margin-top:14px">Marmitas fitness personalizadas com tecnologia nutricional. Saúde na quantidade certa.</p>
+        <div class="footer-slogan">"Entregando saúde na quantidade certa."</div>
+      </div>
+      <div class="footer-col">
+        <h5>Produto</h5>
+        <a href="#missao">Nossa missão</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#planos">Planos</a>
+        <a href="#diferenciais">Diferenciais</a>
+      </div>
+      <div class="footer-col">
+        <h5>Conta</h5>
+        <a href="/login.html">Entrar</a>
+        <a href="/cadastro.html">Criar conta</a>
+        <a href="/dashboard.html">Painel</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © <span id="year"></span> NUTRIBOX — Entregando saúde na quantidade certa.
+    </div>
+  </div>
+</footer>
+
+<script src="/js/app.js"></script>
+<script>
+  renderHeader(document.getElementById("header"));
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  (async () => {
+    try {
+      const { plans } = await api("/api/plans");
+      renderPlans(plans);
+    } catch(e) {
+      renderPlans([
+        { name:"Semanal",  price:89,  period:"/semana", type:"semanal", highlighted:false,
+          features:["7 dias de marmitas","3 refeições/dia","Painel de macros","Restrições respeitadas"] },
+        { name:"Mensal",   price:299, period:"/mês",    type:"mensal",  highlighted:true,
+          features:["30 dias de marmitas","5 refeições/dia","Receita do nutri","Progresso semanal","Cardápio variado"] },
+        { name:"Anual",    price:249, period:"/mês",    type:"anual",   highlighted:false,
+          features:["Tudo do Mensal","2 meses grátis","Consultoria nutricional inclusa"] },
+      ]);
+    }
+  })();
+
+  function renderPlans(plans) {
+    document.getElementById("plans-preview").innerHTML = plans.map(p => `
+      <div class="plan ${p.highlighted?"highlighted":""}">
+        ${p.highlighted ? '<span class="badge">🌿 Mais popular</span>' : ''}
+        <div class="plan-name">${p.name}</div>
+        <div class="price"><strong>${fmtCurrency(p.price)}</strong><span>${p.period}</span></div>
+        <hr class="divider">
+        <ul>${p.features.map(f=>`<li><span class="check-icon">✓</span>${f}</li>`).join("")}</ul>
+        <a class="btn ${p.highlighted?"btn-primary":"btn-outline"} btn-full" href="/cadastro.html">
+          Começar com ${p.name}
+        </a>
+      </div>`).join("");
+  }
+</script>
 </body>
 </html>

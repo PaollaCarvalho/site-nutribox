@@ -1,0 +1,53 @@
+{
+  "users": [
+    {
+      "id": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+      "email": "pcrisstine@gmail.com",
+      "password": "12345678",
+      "fullName": "Paola Carvalho",
+      "age": 20,
+      "weight": 50,
+      "height": 158,
+      "goal": "manutencao",
+      "restrictions": [
+        "Amendoim"
+      ],
+      "nutrition": {
+        "protein": 35,
+        "carbs": 50,
+        "fat": 12,
+        "totalGrams": 350
+      },
+      "plan": "semanal",
+      "createdAt": "2026-06-03T03:51:21.604827"
+    },
+    {
+      "id": "de8ed217-553f-4494-8b90-1cdfb25fc9b3",
+      "email": "polyanacarv@gmail.com",
+      "password": "123456",
+      "fullName": "Usuário SImulação",
+      "age": 28,
+      "weight": 72.0,
+      "height": 170.0,
+      "goal": "emagrecimento",
+      "restrictions": [
+        "Glúten"
+      ],
+      "nutrition": null,
+      "plan": null,
+      "createdAt": "2026-06-23T02:53:40.170884"
+    }
+  ],
+  "sessions": {
+    "05a271e7946393ec0a6ff29ceb54f9ff": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "ca68cfda4c5a43e4974c7bb9cfcbf6f5": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "585a354eb06e0bf4fdf263c8fd0bd6db": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "d69389c900b2bbe0af746cf5e3440bd0": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "466876173b05af490be1f28078abd830": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "3001cdd4637bd86fd6a06638573b13b3": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "5fff48b5bc38a8f9317ced2aa26df926": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "80d88ad3ec9d8ea0d86557aa51b9077f": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "98336c107b30746d7e5c144fc9196745": "f1c19d69-8689-46db-9e0e-1113afe740dc",
+    "c69e49d44e40543fa1f2827148354265": "f1c19d69-8689-46db-9e0e-1113afe740dc"
+  }
+}

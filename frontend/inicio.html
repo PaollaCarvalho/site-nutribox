@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Início — NUTRIBOX</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/js/app.js"></script>
+<script src="/js/dashboard.js"></script>
+<script>
+(async () => {
+  const user = await setupDashboard("inicio");
+  if (!user) return;
+  const n = user.nutrition || { protein: 150, carbs: 200, fat: 60 };
+  const firstName = user.fullName.split(" ")[0];
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
+
+  // Simula consumo do dia (em produção viria da API)
+  const consumed = { protein: 82, carbs: 130, fat: 28, kcal: 1120 };
+  const goal     = {
+    protein: n.protein || 150,
+    carbs:   n.carbs   || 200,
+    fat:     n.fat     || 60,
+    kcal:    calcKcal(n.protein||150, n.carbs||200, n.fat||60)
+  };
+  const pct = v => Math.min(100, Math.round(v));
+  const today = new Date();
+  const dias = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+  const weekDays = Array.from({length:7},(_,i)=>{
+    const d = new Date(today); d.setDate(today.getDate()-today.getDay()+i);
+    return { short: dias[i], num: d.getDate(), active: i===today.getDay() };
+  });
+
+  // Próxima marmita
+  const nextMeal = (() => {
+    if (hour < 7)  return { type:"Café da manhã", emoji:"☀️", time:"07:30", name:"Bowl proteico" };
+    if (hour < 10) return { type:"Lanche da manhã", emoji:"🍎", time:"10:00", name:"Iogurte grego" };
+    if (hour < 13) return { type:"Almoço", emoji:"🍽️", time:"12:30", name:"Frango + quinoa" };
+    if (hour < 16) return { type:"Lanche", emoji:"🥤", time:"15:30", name:"Wrap de atum" };
+    return { type:"Jantar", emoji:"🌙", time:"19:30", name:"Salmão grelhado" };
+  })();
+
+  const content = document.getElementById("content");
+  content.innerHTML = `
+    <!-- Saudação -->
+    <div style="margin-bottom:28px">
+      <h2 style="margin:0;font-size:26px;font-weight:800;letter-spacing:-0.02em">
+        ${greeting}, ${firstName}! 👋
+      </h2>
+      <p class="text-muted text-sm" style="margin:4px 0 0">
+        ${today.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"})}
+      </p>
+    </div>
+
+    <!-- Seletor de dia da semana -->
+    <div class="day-selector mb-6">
+      ${weekDays.map(d=>`
+        <button class="day-btn${d.active?" active":""}">
+          <span class="day-short">${d.short}</span>
+          <span class="day-num">${d.num}</span>
+        </button>`).join("")}
+    </div>
+
+    <!-- Stats macros do dia -->
+    <div class="stats-bar" style="margin-bottom:28px">
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-label">Calorias hoje</div>
+        <div class="stat-val">${consumed.kcal}</div>
+        <div class="stat-sub">meta: ${goal.kcal} kcal</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💪</div>
+        <div class="stat-label">Proteína</div>
+        <div class="stat-val">${consumed.protein}g</div>
+        <div class="stat-sub">meta: ${goal.protein}g</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌾</div>
+        <div class="stat-label">Carboidrato</div>
+        <div class="stat-val">${consumed.carbs}g</div>
+        <div class="stat-sub">meta: ${goal.carbs}g</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🫒</div>
+        <div class="stat-label">Gordura</div>
+        <div class="stat-val">${consumed.fat}g</div>
+        <div class="stat-sub">meta: ${goal.fat}g</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="gap:20px;align-items:start">
+      <!-- Progresso macros -->
+      <div class="section" style="margin-bottom:0">
+        <div class="section-hd">
+          <h3>Macros do dia</h3>
+          <span class="pill pill-green text-xs">Atualizado agora</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;margin-bottom:24px" class="calorie-ring-wrap">
+          <div class="calorie-ring">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="var(--muted)" stroke-width="10"/>
+              <circle cx="50" cy="50" r="40" fill="none" stroke="var(--warning)" stroke-width="10"
+                stroke-dasharray="${2*Math.PI*40}" stroke-dashoffset="${2*Math.PI*40*(1-consumed.kcal/goal.kcal)}"
+                stroke-linecap="round"/>
+            </svg>
+            <div class="ring-center">
+              <span class="ring-val">${Math.round(consumed.kcal/goal.kcal*100)}%</span>
+              <span class="ring-label">kcal</span>
+            </div>
+          </div>
+          <div class="ring-legend">
+            <div class="ring-item"><div class="ring-dot" style="background:var(--primary)"></div><span>Prot: ${consumed.protein}/${goal.protein}g</span></div>
+            <div class="ring-item"><div class="ring-dot" style="background:#e87c2b"></div><span>Carb: ${consumed.carbs}/${goal.carbs}g</span></div>
+            <div class="ring-item"><div class="ring-dot" style="background:var(--primary)"></div><span>Gord: ${consumed.fat}/${goal.fat}g</span></div>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-top"><span class="name">Proteína</span><span class="val">${consumed.protein}g / ${goal.protein}g</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct(consumed.protein/goal.protein*100)}%;background:var(--primary)"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-top"><span class="name">Carboidrato</span><span class="val">${consumed.carbs}g / ${goal.carbs}g</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct(consumed.carbs/goal.carbs*100)}%;background:var(--warning)"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-top"><span class="name">Gordura</span><span class="val">${consumed.fat}g / ${goal.fat}g</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct(consumed.fat/goal.fat*100)}%;background:var(--primary)"></div></div>
+        </div>
+      </div>
+
+      <!-- Próxima refeição + pedido ativo -->
+      <div>
+        <div class="section" style="margin-bottom:16px">
+          <div class="section-hd"><h3>Próxima refeição</h3></div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:56px;height:56px;border-radius:16px;background:var(--primary-soft);display:grid;place-items:center;font-size:28px;flex-shrink:0">
+              ${nextMeal.emoji}
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted-foreground)">${nextMeal.type} · ${nextMeal.time}</div>
+              <div style="font-size:17px;font-weight:700;margin-top:2px">${nextMeal.name}</div>
+            </div>
+          </div>
+          <a class="btn btn-outline btn-full btn-sm" href="/dashboard.html" style="margin-top:16px">
+            Ver cardápio completo →
+          </a>
+        </div>
+
+        <div class="section" style="margin-bottom:0">
+          <div class="section-hd"><h3>Último pedido</h3></div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="font-size:24px">🛵</span>
+            <div>
+              <div style="font-size:14px;font-weight:600">Pedido #2841</div>
+              <div class="text-muted text-sm">Em rota · Previsão 17h</div>
+            </div>
+            <span class="status em_rota" style="margin-left:auto">Em rota</span>
+          </div>
+          <div style="margin-top:16px">
+            <div class="progress-bar" style="height:6px">
+              <div class="progress-fill" style="width:75%;background:var(--primary)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted-foreground);margin-top:6px">
+              <span>Preparando</span><span>Em rota</span><span>Entregue</span>
+            </div>
+          </div>
+          <a class="btn btn-outline btn-full btn-sm" href="/pedidos.html" style="margin-top:16px">
+            Ver todos os pedidos →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Atividade recente -->
+    <div class="section" style="margin-top:20px">
+      <div class="section-hd">
+        <h3>Atividade recente</h3>
+        <a href="/pedidos.html" class="btn btn-ghost btn-sm text-sm">Ver tudo</a>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot" style="background:var(--primary-soft)">✅</div>
+        <div class="activity-info">
+          <div class="activity-title">Pedido #2839 entregue</div>
+          <div class="activity-sub">Ontem às 14h22 · 5 marmitas</div>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot" style="background:var(--primary-soft)">🍳</div>
+        <div class="activity-info">
+          <div class="activity-title">Cardápio da semana atualizado</div>
+          <div class="activity-sub">Segunda-feira · 7 dias, 5 refeições/dia</div>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot" style="background:var(--primary-soft)">🎯</div>
+        <div class="activity-info">
+          <div class="activity-title">Meta de proteína atingida</div>
+          <div class="activity-sub">3 dias consecutivos!</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Day selector: troca de dia
+  document.querySelectorAll(".day-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".day-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+})();
+</script>
+</body>
+</html>

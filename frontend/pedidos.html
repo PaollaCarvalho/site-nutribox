@@ -7,35 +7,98 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
-  <div id="app"></div>
-  <script src="/js/app.js"></script>
-  <script src="/js/dashboard.js"></script>
-  <script>
-    (async () => {
-      if (!(await setupDashboard("pedidos"))) return;
-      const { orders } = await api("/api/orders", { auth: true });
-      document.getElementById("content").innerHTML = `
-        <div style="margin-bottom:20px">
-          <h2 style="margin:0;font-size:22px">Seus pedidos</h2>
-          <p class="help" style="margin:4px 0 0">Acompanhe entregas e histórico de marmitas.</p>
+<div id="app"></div>
+<script src="/js/app.js"></script>
+<script src="/js/dashboard.js"></script>
+<script>
+(async () => {
+  if (!(await setupDashboard("pedidos"))) return;
+
+  let orders = [];
+  try {
+    const data = await api("/api/orders", { auth: true });
+    orders = data.orders;
+  } catch(e) {
+    orders = [
+      { id:"#2841", date:"2026-06-22", meals:"5 refeições", status:"em_rota" },
+      { id:"#2839", date:"2026-06-15", meals:"5 refeições", status:"entregue"},
+      { id:"#2821", date:"2026-06-08", meals:"5 refeições", status:"entregue"},
+      { id:"#2803", date:"2026-06-01", meals:"5 refeições", status:"entregue"},
+      { id:"#2789", date:"2026-05-25", meals:"5 refeições", status:"entregue"},
+      { id:"#2771", date:"2026-05-18", meals:"3 refeições", status:"entregue"},
+    ];
+  }
+
+  const active = orders.find(o => o.status === "em_rota" || o.status === "em_preparo" || o.status === "pendente");
+
+  document.getElementById("content").innerHTML = `
+    <div class="between mb-6" style="flex-wrap:wrap;gap:12px">
+      <div>
+        <h2 style="margin:0;font-size:22px;font-weight:800">Pedidos</h2>
+        <p class="text-muted text-sm" style="margin:4px 0 0">Acompanhe entregas e histórico de marmitas.</p>
+      </div>
+    </div>
+
+    <!-- Pedido ativo -->
+    ${active ? `
+    <div style="background:#1f2922;border-radius:var(--radius-xl);padding:24px;margin-bottom:24px">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.5);margin-bottom:12px">
+        Pedido em andamento
+      </div>
+      <div class="between" style="flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="font-size:20px;font-weight:800;color:var(--white)">${active.id} · ${active.meals}</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-top:4px">${fmtDate(active.date)}</div>
         </div>
-        <div class="table-wrap">
-          <table class="orders">
-            <thead>
-              <tr><th>Pedido</th><th>Data</th><th>Refeições</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              ${orders.map(o => `
-                <tr>
-                  <td><strong>${o.id}</strong></td>
-                  <td style="color:var(--muted-foreground)">${fmtDate(o.date)}</td>
-                  <td>${o.meals}</td>
-                  <td><span class="status ${o.status}">${STATUS_LABELS[o.status]}</span></td>
-                </tr>`).join("")}
-            </tbody>
-          </table>
-        </div>`;
-    })();
-  </script>
+        <span class="status ${active.status}" style="font-size:14px;padding:6px 16px">
+          ${STATUS_ICONS[active.status]} ${STATUS_LABELS[active.status]}
+        </span>
+      </div>
+      <!-- Linha de progresso -->
+      <div style="margin-top:20px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          ${["pendente","em_preparo","em_rota","entregue"].map((s,i)=>{
+            const steps = ["pendente","em_preparo","em_rota","entregue"];
+            const iDone = steps.indexOf(active.status);
+            return `<div style="text-align:center;font-size:11px;font-weight:700;color:${i<=iDone?"rgba(255,255,255,0.9)":"rgba(255,255,255,0.3)"};flex:1">
+              <div style="font-size:18px;margin-bottom:4px">${STATUS_ICONS[s]}</div>
+              ${STATUS_LABELS[s]}
+            </div>`;
+          }).join("")}
+        </div>
+        <div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;overflow:hidden">
+          <div style="height:100%;background:var(--warning);border-radius:2px;width:${
+            active.status==="pendente"?"10%":active.status==="em_preparo"?"40%":active.status==="em_rota"?"75%":"100%"
+          };transition:width 0.6s"></div>
+        </div>
+      </div>
+    </div>` : ""}
+
+    <!-- Tabela de histórico -->
+    <div class="section" style="margin-bottom:0">
+      <div class="section-hd"><h3>Histórico de pedidos</h3></div>
+      <div class="table-wrap" style="border:none;box-shadow:none;border-radius:0">
+        <table class="orders">
+          <thead>
+            <tr>
+              <th>Pedido</th>
+              <th>Data</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orders.map(o => `
+              <tr>
+                <td><strong style="color:var(--primary)">${o.id}</strong></td>
+                <td class="text-muted">${fmtDate(o.date)}</td>
+                <td><span class="status ${o.status}">${STATUS_ICONS[o.status]} ${STATUS_LABELS[o.status]}</span></td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+})();
+</script>
 </body>
 </html>
