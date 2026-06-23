@@ -1,0 +1,83 @@
+{
+  "users": [
+    {
+      "id": "9a09e499-6019-4b32-8291-512ba6820bfb",
+      "email": "erg@sdf",
+      "password": "wertdfg",
+      "fullName": "dfg",
+      "age": 13,
+      "weight": 111.0,
+      "height": 123.0,
+      "goal": "manutencao",
+      "restrictions": [],
+      "nutrition": {
+        "protein": 35,
+        "carbs": 50,
+        "fat": 12,
+        "totalGrams": 350
+      },
+      "plan": "mensal",
+      "createdAt": "2026-06-23T00:59:19.438791"
+    },
+    {
+      "id": "63042a04-0845-4079-9ac9-3f9d0853f90e",
+      "email": "sdfgh@sdfghgfd",
+      "password": "qwertyhgfdsdfg",
+      "fullName": "sdfg",
+      "age": 110,
+      "weight": 123.0,
+      "height": 123.0,
+      "goal": "manutencao",
+      "restrictions": [],
+      "nutrition": {
+        "protein": 35,
+        "carbs": 50,
+        "fat": 12,
+        "totalGrams": 350
+      },
+      "plan": "mensal",
+      "createdAt": "2026-06-23T01:13:16.026319"
+    },
+    {
+      "id": "de4cf296-bcae-4e0f-a5eb-00598136d57c",
+      "email": "sdfghgfd@sdfds",
+      "password": "asdffdsasdf",
+      "fullName": "xcvb",
+      "age": 111,
+      "weight": 111.0,
+      "height": 111.0,
+      "goal": "manutencao",
+      "restrictions": [],
+      "nutrition": {
+        "protein": 35,
+        "carbs": 50,
+        "fat": 12,
+        "totalGrams": 350
+      },
+      "plan": "mensal",
+      "createdAt": "2026-06-23T01:37:02.226306"
+    },
+    {
+      "id": "f61ae5cd-5c3e-4621-acae-57a404f73730",
+      "email": "dfgfds@dfghgf",
+      "password": "sdfghhgfdfgh",
+      "fullName": "dfghjk",
+      "age": 111,
+      "weight": 111.0,
+      "height": 111.0,
+      "goal": "manutencao",
+      "restrictions": [],
+      "nutrition": {
+        "protein": 35,
+        "carbs": 50,
+        "fat": 12,
+        "totalGrams": 350
+      },
+      "plan": null,
+      "createdAt": "2026-06-23T01:46:35.069594"
+    }
+  ],
+  "sessions": {
+    "64a5088db1b998abf8bac1ea79847d64": "9a09e499-6019-4b32-8291-512ba6820bfb"
+  }
+}

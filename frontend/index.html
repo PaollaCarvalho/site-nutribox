@@ -14,30 +14,12 @@
     <span class="pill">🌿 Nutrição inteligente, sabor de verdade</span>
     <h1><span class="accent">NUTRI</span>BOX</h1>
     <p>Defina suas metas de macros, escolha seu plano e receba refeições personalizadas geradas por algoritmo nutricional, prontas pra esquentar.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="/cadastro.html">Criar minha conta</a>
       <a class="btn btn-outline btn-lg" href="/login.html">Já sou cliente</a>
     </div>
   </section>
 
   <section class="features container">
-    <div class="grid grid-3">
-      <div class="feature">
-        <div class="icon">🎯</div>
-        <h3>Metas personalizadas</h3>
-        <p>Defina proteína, carbo e gordura por refeição. O cardápio se adapta a você.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">🥗</div>
-        <h3>Cardápio inteligente</h3>
-        <p>Variedade semanal gerada por algoritmo, respeitando restrições alimentares.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">🚚</div>
-        <h3>Entregas no ritmo certo</h3>
-        <p>Planos semanal, mensal ou anual. Receba fresquinho onde estiver.</p>
-      </div>
-    </div>
+    <div class="grid grid-3" id="plans" style="width:100%;max-width:1000px;margin:0 auto;"></div>
   </section>
 
   <footer class="site-footer">
@@ -48,6 +30,28 @@
   <script>
     renderHeader(document.getElementById("header"));
     document.getElementById("year").textContent = new Date().getFullYear();
+    (async () => {
+      const { plans } = await api("/api/plans");
+      const root = document.getElementById("plans");
+      root.innerHTML = plans.map(p => `
+        <div class="plan ${p.highlighted ? "highlighted" : ""}">
+          ${p.highlighted ? '<span class="badge">Mais popular</span>' : ''}
+          <h3>${p.name}</h3>
+          <div class="price"><strong>${fmtCurrency(p.price)}</strong><span>${p.period}</span></div>
+          <ul>${p.features.map(f => `<li>${f}</li>`).join("")}</ul>
+          <button class="btn ${p.highlighted ? "btn-primary" : "btn-outline"} btn-full" data-plan="${p.type}">
+            Selecionar ${p.name}
+          </button>
+        </div>`).join("");
+      root.querySelectorAll("button[data-plan]").forEach(b => {
+        b.addEventListener("click", async () => {
+          try {
+            toast("Plano selecionado!");
+            setTimeout(() => location.href = "/cadastro.html", 400);
+          } catch (e) { toast(e.message, "error"); }
+        });
+      });
+    })();
   </script>
 </body>
 </html>
